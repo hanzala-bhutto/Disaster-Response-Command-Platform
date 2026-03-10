@@ -19,6 +19,7 @@ Acts as the main backend entry point for the frontend.
 - `POST /tasks`
 - `PATCH /tasks/{task_id}`
 - `DELETE /tasks/{task_id}`
+- `GET /notifications`
 
 ## Events published
 None for now.
@@ -33,3 +34,4 @@ None for now.
 ## Environment variables
 - `INCIDENT_SERVICE_URL`
 - `COORDINATION_SERVICE_URL`
+- `NOTIFICATION_SERVICE_URL`

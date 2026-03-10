@@ -47,6 +47,7 @@ function Badge({ value }) {
 function App() {
   const [incidents, setIncidents] = useState([]);
   const [tasks, setTasks] = useState([]);
+  const [notifications, setNotifications] = useState([]);
   const [incidentForm, setIncidentForm] = useState(emptyIncidentForm);
   const [taskForm, setTaskForm] = useState(emptyTaskForm);
   const [loading, setLoading] = useState(true);
@@ -62,9 +63,14 @@ function App() {
     setError('');
 
     try {
-      const [incidentData, taskData] = await Promise.all([api.listIncidents(), api.listTasks()]);
+      const [incidentData, taskData, notificationData] = await Promise.all([
+        api.listIncidents(),
+        api.listTasks(),
+        api.listNotifications(),
+      ]);
       setIncidents(incidentData);
       setTasks(taskData);
+      setNotifications(notificationData);
       setTaskForm((current) => ({
         ...current,
         incident_id: current.incident_id || incidentData[0]?.id || '',
@@ -156,11 +162,11 @@ function App() {
         <section className="mb-8 overflow-hidden rounded-3xl bg-gradient-to-r from-slate-900 via-blue-900 to-blue-600 px-6 py-8 text-white shadow-2xl shadow-blue-900/10 sm:px-8">
           <div className="max-w-3xl">
             <p className="mb-3 inline-flex rounded-full bg-white/10 px-3 py-1 text-xs font-semibold uppercase tracking-[0.2em] text-blue-100">
-              Phase 2 Dashboard
+              Phase 3 Dashboard
             </p>
             <h1 className="text-3xl font-bold tracking-tight sm:text-4xl">Disaster Response Command Platform</h1>
             <p className="mt-3 text-sm leading-6 text-blue-50 sm:text-base">
-              Phase 2 dashboard: create incidents, track tasks, and prepare for RabbitMQ, RAG, and AI orchestration.
+              Phase 3 dashboard: incidents publish events, tasks can be created automatically, and notifications show the message flow.
             </p>
           </div>
         </section>
@@ -375,6 +381,31 @@ function App() {
                       Delete
                     </button>
                   </div>
+                </article>
+              ))}
+            </div>
+          </section>
+
+          <section className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm lg:col-span-2">
+            <div className="flex items-center justify-between gap-3">
+              <div>
+                <h2 className="text-xl font-semibold text-slate-900">Event Notifications</h2>
+                <p className="mt-1 text-sm text-slate-500">Notifications created by the notification service from RabbitMQ events.</p>
+              </div>
+              <div className="rounded-2xl bg-slate-100 px-3 py-2 text-sm font-medium text-slate-600">{notifications.length} total</div>
+            </div>
+            {!loading && notifications.length === 0 ? <p className="mt-4 text-sm text-slate-500">No notifications yet.</p> : null}
+            <div className="mt-6 space-y-3">
+              {notifications.map((notification) => (
+                <article className="rounded-2xl border border-slate-200 bg-slate-50 p-4" key={notification.id}>
+                  <div className="flex flex-wrap items-center gap-2">
+                    <Badge value={notification.level === 'critical' ? 'critical' : notification.level === 'warning' ? 'high' : 'low'} />
+                    <span className="rounded-full bg-slate-200 px-3 py-1 text-xs font-semibold text-slate-700">
+                      {notification.source_event}
+                    </span>
+                  </div>
+                  <h3 className="mt-3 text-base font-semibold text-slate-900">{notification.title}</h3>
+                  <p className="mt-1 text-sm text-slate-600">{notification.message}</p>
                 </article>
               ))}
             </div>

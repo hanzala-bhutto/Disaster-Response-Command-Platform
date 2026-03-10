@@ -63,6 +63,11 @@ async def delete_task(task_id: str) -> Response:
     return Response(status_code=status.HTTP_204_NO_CONTENT)
 
 
+@app.get("/notifications")
+async def list_notifications() -> list[dict]:
+    return await clients.get_notifications()
+
+
 @app.exception_handler(httpx.HTTPStatusError)
 async def http_status_error_handler(_, exc: httpx.HTTPStatusError):
     detail = exc.response.text or "Downstream service error"

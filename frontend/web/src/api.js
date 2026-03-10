@@ -30,4 +30,5 @@ export const api = {
   createTask: (payload) => request('/tasks', { method: 'POST', body: JSON.stringify(payload) }),
   updateTask: (id, payload) => request(`/tasks/${id}`, { method: 'PATCH', body: JSON.stringify(payload) }),
   deleteTask: (id) => request(`/tasks/${id}`, { method: 'DELETE' }),
+  listNotifications: () => request('/notifications'),
 };

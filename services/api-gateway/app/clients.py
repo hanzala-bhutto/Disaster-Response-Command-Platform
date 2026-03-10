@@ -50,5 +50,11 @@ class ServiceClients:
             response = await client.delete(f"{settings.coordination_service_url}/tasks/{task_id}")
             response.raise_for_status()
 
+    async def get_notifications(self) -> list[dict]:
+        async with httpx.AsyncClient(timeout=10.0) as client:
+            response = await client.get(f"{settings.notification_service_url}/notifications")
+            response.raise_for_status()
+            return response.json()
+
 
 clients = ServiceClients()

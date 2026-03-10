@@ -21,7 +21,10 @@ Creates and manages response tasks for incidents.
 - `task.created` later
 
 ## Events consumed
-- `incident.created` later
+- `incident.created`
+
+## RabbitMQ in Phase 3
+This service listens for `incident.created` and auto-creates a starter task.
 
 ## How to run locally
 1. install dependencies from `requirements.txt`

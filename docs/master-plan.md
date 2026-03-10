@@ -77,10 +77,11 @@ Keep the first version small.
 3. incident service publishes `incident.created`
 4. coordination service consumes it
 5. coordination service creates tasks
-6. notification service creates alert
-7. AI orchestrator fetches incident + RAG context
-8. AI orchestrator calls LLM API
-9. frontend shows the plan
+6. coordination service publishes `task.created`
+7. notification service creates alerts from incident and task events
+8. AI orchestrator fetches incident + RAG context
+9. AI orchestrator calls LLM API
+10. frontend shows the plan
 
 ## 7. Agentic workflow pattern
 Use the same pattern everywhere:

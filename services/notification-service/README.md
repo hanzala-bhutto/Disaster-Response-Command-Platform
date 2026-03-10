@@ -11,15 +11,19 @@ Creates alerts and notification records for the dashboard.
 
 ## Main endpoints
 - `GET /health`
+- `GET /notifications`
 
 ## Events published
 - `notification.created` later
 
 ## Events consumed
-- event consumers will be added later
+- `incident.created`
+- `task.created`
 
 ## How to run locally
-This will be added later.
+1. install dependencies from `requirements.txt`
+2. run `uvicorn app.main:app --reload --port 8003`
 
 ## Environment variables
-This will be added later.
+- `RABBITMQ_URL`
+- `RABBITMQ_EXCHANGE`

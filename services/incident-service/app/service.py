@@ -1,4 +1,5 @@
 from datetime import datetime, timezone
+from threading import Lock
 from uuid import UUID, uuid4
 
 from .schemas import Incident, IncidentCreate, IncidentUpdate
@@ -6,6 +7,7 @@ from .schemas import Incident, IncidentCreate, IncidentUpdate
 
 class IncidentService:
     def __init__(self) -> None:
+        self._lock = Lock()
         self._incidents: dict[UUID, Incident] = {}
         self._seed()
 
@@ -20,13 +22,17 @@ class IncidentService:
             status="new",
             created_at=datetime.now(timezone.utc),
         )
-        self._incidents[sample.id] = sample
+        with self._lock:
+            self._incidents[sample.id] = sample
 
     def list_incidents(self) -> list[Incident]:
-        return sorted(self._incidents.values(), key=lambda incident: incident.created_at, reverse=True)
+        with self._lock:
+            incidents = list(self._incidents.values())
+        return sorted(incidents, key=lambda incident: incident.created_at, reverse=True)
 
     def get_incident(self, incident_id: UUID) -> Incident | None:
-        return self._incidents.get(incident_id)
+        with self._lock:
+            return self._incidents.get(incident_id)
 
     def create_incident(self, payload: IncidentCreate) -> Incident:
         incident = Incident(
@@ -39,21 +45,25 @@ class IncidentService:
             status="new",
             created_at=datetime.now(timezone.utc),
         )
-        self._incidents[incident.id] = incident
+        with self._lock:
+            self._incidents[incident.id] = incident
         return incident
 
     def update_incident(self, incident_id: UUID, payload: IncidentUpdate) -> Incident | None:
-        incident = self._incidents.get(incident_id)
+        with self._lock:
+            incident = self._incidents.get(incident_id)
         if incident is None:
             return None
 
         updated = incident.model_copy(update=payload.model_dump(exclude_none=True))
-        self._incidents[incident_id] = updated
+        with self._lock:
+            self._incidents[incident_id] = updated
         return updated
 
     def delete_incident(self, incident_id: UUID) -> bool:
-        if incident_id not in self._incidents:
-            return False
+        with self._lock:
+            if incident_id not in self._incidents:
+                return False
 
-        del self._incidents[incident_id]
-        return True
+            del self._incidents[incident_id]
+            return True

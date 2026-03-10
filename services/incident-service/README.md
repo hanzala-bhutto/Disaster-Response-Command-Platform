@@ -22,6 +22,9 @@ Stores and manages disaster incidents.
 - `incident.created` later
 - `incident.updated` later
 
+## RabbitMQ in Phase 3
+When a new incident is created, this service now publishes `incident.created`.
+
 ## Events consumed
 None for now.
 

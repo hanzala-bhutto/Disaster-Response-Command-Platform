@@ -39,13 +39,13 @@ This platform receives disaster incidents like floods or fires and turns them in
 ## Phases
 1. Phase 1 - plan and project skeleton
 2. Phase 2 - incident and task CRUD
-3. Phase 3 - RabbitMQ event flow
+3. Phase 3 - RabbitMQ event flow and notifications
 4. Phase 4 - RAG with Qdrant
 5. Phase 5 - AI orchestration
 6. Phase 6 - Kubernetes deployment
 
 ## Current status
-Phase 2 is being implemented.
+Phase 3 is being implemented.
 
 ## What to read first
 - `docs/master-plan.md`

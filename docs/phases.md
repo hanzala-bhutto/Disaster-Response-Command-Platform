@@ -38,6 +38,7 @@ Connect services using RabbitMQ.
 - publish `incident.created`
 - consume event in coordination service
 - create notifications
+- show notifications in the dashboard
 
 ### What you learn
 - async systems

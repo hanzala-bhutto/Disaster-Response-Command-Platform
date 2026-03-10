@@ -2,6 +2,7 @@ from uuid import UUID
 
 from fastapi import FastAPI, HTTPException, Response, status
 
+from .event_bus import safe_publish
 from .schemas import Incident, IncidentCreate, IncidentUpdate
 from .service import IncidentService
 
@@ -11,7 +12,7 @@ service = IncidentService()
 
 @app.get("/health")
 def health() -> dict:
-    return {"service": "incident-service", "status": "ok", "phase": 2}
+    return {"service": "incident-service", "status": "ok", "phase": 3}
 
 
 @app.get("/incidents", response_model=list[Incident])
@@ -29,7 +30,16 @@ def get_incident(incident_id: UUID) -> Incident:
 
 @app.post("/incidents", response_model=Incident, status_code=status.HTTP_201_CREATED)
 def create_incident(payload: IncidentCreate) -> Incident:
-    return service.create_incident(payload)
+    incident = service.create_incident(payload)
+    safe_publish(
+        "incident.created",
+        {
+            "event_type": "incident.created",
+            "incident": incident.model_dump(mode="json"),
+            "occurred_at": incident.created_at.isoformat(),
+        },
+    )
+    return incident
 
 
 @app.patch("/incidents/{incident_id}", response_model=Incident)
