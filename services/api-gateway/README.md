@@ -11,6 +11,14 @@ Acts as the main backend entry point for the frontend.
 
 ## Main endpoints
 - `GET /health`
+- `GET /incidents`
+- `POST /incidents`
+- `PATCH /incidents/{incident_id}`
+- `DELETE /incidents/{incident_id}`
+- `GET /tasks`
+- `POST /tasks`
+- `PATCH /tasks/{task_id}`
+- `DELETE /tasks/{task_id}`
 
 ## Events published
 None for now.
@@ -19,7 +27,9 @@ None for now.
 None for now.
 
 ## How to run locally
-This will be added after Phase 2.
+1. install dependencies from `requirements.txt`
+2. run `uvicorn app.main:app --reload --port 8000`
 
 ## Environment variables
-This will be added later.
+- `INCIDENT_SERVICE_URL`
+- `COORDINATION_SERVICE_URL`

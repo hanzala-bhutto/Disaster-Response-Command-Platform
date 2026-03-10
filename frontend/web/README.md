@@ -22,4 +22,13 @@ This is the React dashboard for disaster operators.
 - document upload
 
 ## How to run locally
-This will be added in Phase 2.
+1. install dependencies with `npm install`
+2. start the app with `npm run dev`
+3. set `VITE_API_BASE_URL` if the gateway runs on a different URL
+
+## What is in Phase 2
+- incident creation form
+- task creation form
+- incident list
+- task list
+- simple status updates

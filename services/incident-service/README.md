@@ -12,15 +12,22 @@ Stores and manages disaster incidents.
 
 ## Main endpoints
 - `GET /health`
+- `GET /incidents`
+- `GET /incidents/{incident_id}`
+- `POST /incidents`
+- `PATCH /incidents/{incident_id}`
+- `DELETE /incidents/{incident_id}`
 
 ## Events published
 - `incident.created` later
+- `incident.updated` later
 
 ## Events consumed
 None for now.
 
 ## How to run locally
-This will be added after Phase 2.
+1. install dependencies from `requirements.txt`
+2. run `uvicorn app.main:app --reload --port 8001`
 
 ## Environment variables
 This will be added later.
