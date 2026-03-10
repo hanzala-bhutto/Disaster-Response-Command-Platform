@@ -25,6 +25,7 @@ This is the React dashboard for disaster operators.
 1. install dependencies with `npm install`
 2. start the app with `npm run dev`
 3. set `VITE_API_BASE_URL` if the gateway runs on a different URL
+4. Tailwind CSS is configured through the Vite plugin
 
 ## What is in Phase 2
 - incident creation form
