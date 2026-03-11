@@ -68,6 +68,21 @@ async def list_notifications() -> list[dict]:
     return await clients.get_notifications()
 
 
+@app.get("/knowledge/documents")
+async def list_documents() -> list[dict]:
+    return await clients.get_documents()
+
+
+@app.post("/knowledge/documents", status_code=status.HTTP_201_CREATED)
+async def create_document(payload: dict) -> dict:
+    return await clients.create_document(payload)
+
+
+@app.post("/knowledge/search")
+async def search_knowledge(payload: dict) -> dict:
+    return await clients.search_knowledge(payload)
+
+
 @app.exception_handler(httpx.HTTPStatusError)
 async def http_status_error_handler(_, exc: httpx.HTTPStatusError):
     detail = exc.response.text or "Downstream service error"

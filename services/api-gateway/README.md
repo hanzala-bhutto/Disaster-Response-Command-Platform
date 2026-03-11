@@ -20,6 +20,9 @@ Acts as the main backend entry point for the frontend.
 - `PATCH /tasks/{task_id}`
 - `DELETE /tasks/{task_id}`
 - `GET /notifications`
+- `GET /knowledge/documents`
+- `POST /knowledge/documents`
+- `POST /knowledge/search`
 
 ## Events published
 None for now.
@@ -35,3 +38,4 @@ None for now.
 - `INCIDENT_SERVICE_URL`
 - `COORDINATION_SERVICE_URL`
 - `NOTIFICATION_SERVICE_URL`
+- `RAG_SERVICE_URL`

@@ -45,7 +45,7 @@ This platform receives disaster incidents like floods or fires and turns them in
 6. Phase 6 - Kubernetes deployment
 
 ## Current status
-Phase 3 is being implemented.
+Phase 4 is implemented.
 
 ## What to read first
 - `docs/master-plan.md`

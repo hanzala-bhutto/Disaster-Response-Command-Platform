@@ -16,6 +16,20 @@ const emptyTaskForm = {
   priority: 'medium',
 };
 
+const emptyKnowledgeForm = {
+  title: '',
+  category: 'SOP',
+  incident_type: 'flood',
+  source: '',
+  content: '',
+};
+
+const emptySearchForm = {
+  query: '',
+  incident_type: 'all',
+  limit: 5,
+};
+
 function Badge({ value }) {
   const styles = {
     low: 'bg-sky-100 text-sky-700 ring-sky-200',
@@ -39,7 +53,7 @@ function Badge({ value }) {
     <span
       className={`inline-flex items-center rounded-full px-3 py-1 text-xs font-semibold capitalize ring-1 ${styles[value] ?? 'bg-gray-100 text-gray-700 ring-gray-200'}`}
     >
-      {value.replace('_', ' ')}
+      {String(value).replace('_', ' ')}
     </span>
   );
 }
@@ -48,8 +62,12 @@ function App() {
   const [incidents, setIncidents] = useState([]);
   const [tasks, setTasks] = useState([]);
   const [notifications, setNotifications] = useState([]);
+  const [documents, setDocuments] = useState([]);
+  const [searchResults, setSearchResults] = useState([]);
   const [incidentForm, setIncidentForm] = useState(emptyIncidentForm);
   const [taskForm, setTaskForm] = useState(emptyTaskForm);
+  const [knowledgeForm, setKnowledgeForm] = useState(emptyKnowledgeForm);
+  const [searchForm, setSearchForm] = useState(emptySearchForm);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
 
@@ -63,14 +81,16 @@ function App() {
     setError('');
 
     try {
-      const [incidentData, taskData, notificationData] = await Promise.all([
+      const [incidentData, taskData, notificationData, documentData] = await Promise.all([
         api.listIncidents(),
         api.listTasks(),
         api.listNotifications(),
+        api.listKnowledgeDocuments(),
       ]);
       setIncidents(incidentData);
       setTasks(taskData);
       setNotifications(notificationData);
+      setDocuments(documentData);
       setTaskForm((current) => ({
         ...current,
         incident_id: current.incident_id || incidentData[0]?.id || '',
@@ -107,6 +127,35 @@ function App() {
       await api.createTask(taskForm);
       setTaskForm((current) => ({ ...emptyTaskForm, incident_id: current.incident_id }));
       await loadData();
+    } catch (requestError) {
+      setError(requestError.message);
+    }
+  }
+
+  async function handleKnowledgeSubmit(event) {
+    event.preventDefault();
+    setError('');
+
+    try {
+      await api.createKnowledgeDocument(knowledgeForm);
+      setKnowledgeForm(emptyKnowledgeForm);
+      await loadData();
+    } catch (requestError) {
+      setError(requestError.message);
+    }
+  }
+
+  async function handleKnowledgeSearch(event) {
+    event.preventDefault();
+    setError('');
+
+    try {
+      const result = await api.searchKnowledge({
+        query: searchForm.query,
+        incident_type: searchForm.incident_type === 'all' ? null : searchForm.incident_type,
+        limit: Number(searchForm.limit),
+      });
+      setSearchResults(result.matches);
     } catch (requestError) {
       setError(requestError.message);
     }
@@ -160,13 +209,14 @@ function App() {
     <div className="min-h-screen bg-slate-50 text-slate-900">
       <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
         <section className="mb-8 overflow-hidden rounded-3xl bg-gradient-to-r from-slate-900 via-blue-900 to-blue-600 px-6 py-8 text-white shadow-2xl shadow-blue-900/10 sm:px-8">
-          <div className="max-w-3xl">
+          <div className="max-w-4xl">
             <p className="mb-3 inline-flex rounded-full bg-white/10 px-3 py-1 text-xs font-semibold uppercase tracking-[0.2em] text-blue-100">
-              Phase 3 Dashboard
+              Phase 4 Dashboard
             </p>
             <h1 className="text-3xl font-bold tracking-tight sm:text-4xl">Disaster Response Command Platform</h1>
             <p className="mt-3 text-sm leading-6 text-blue-50 sm:text-base">
-              Phase 3 dashboard: incidents publish events, tasks can be created automatically, and notifications show the message flow.
+              Phase 4 adds a simple Qdrant-based knowledge base. You can ingest emergency guidance, search for relevant chunks,
+              and prepare the retrieval layer that Phase 5 will use for AI answers.
             </p>
           </div>
         </section>
@@ -178,19 +228,11 @@ function App() {
             <form className="mt-6 space-y-4" onSubmit={handleIncidentSubmit}>
               <div className="space-y-1.5">
                 <label className="text-sm font-medium text-slate-700">Title</label>
-                <input
-                  className="w-full rounded-2xl border border-slate-300 px-4 py-3 outline-none transition focus:border-blue-500 focus:ring-4 focus:ring-blue-100"
-                  value={incidentForm.title}
-                  onChange={(event) => setIncidentForm({ ...incidentForm, title: event.target.value })}
-                />
+                <input className="w-full rounded-2xl border border-slate-300 px-4 py-3 outline-none transition focus:border-blue-500 focus:ring-4 focus:ring-blue-100" value={incidentForm.title} onChange={(event) => setIncidentForm({ ...incidentForm, title: event.target.value })} />
               </div>
               <div className="space-y-1.5">
                 <label className="text-sm font-medium text-slate-700">Type</label>
-                <select
-                  className="w-full rounded-2xl border border-slate-300 px-4 py-3 outline-none transition focus:border-blue-500 focus:ring-4 focus:ring-blue-100"
-                  value={incidentForm.type}
-                  onChange={(event) => setIncidentForm({ ...incidentForm, type: event.target.value })}
-                >
+                <select className="w-full rounded-2xl border border-slate-300 px-4 py-3 outline-none transition focus:border-blue-500 focus:ring-4 focus:ring-blue-100" value={incidentForm.type} onChange={(event) => setIncidentForm({ ...incidentForm, type: event.target.value })}>
                   <option value="flood">Flood</option>
                   <option value="fire">Fire</option>
                   <option value="earthquake">Earthquake</option>
@@ -201,11 +243,7 @@ function App() {
               </div>
               <div className="space-y-1.5">
                 <label className="text-sm font-medium text-slate-700">Severity</label>
-                <select
-                  className="w-full rounded-2xl border border-slate-300 px-4 py-3 outline-none transition focus:border-blue-500 focus:ring-4 focus:ring-blue-100"
-                  value={incidentForm.severity}
-                  onChange={(event) => setIncidentForm({ ...incidentForm, severity: event.target.value })}
-                >
+                <select className="w-full rounded-2xl border border-slate-300 px-4 py-3 outline-none transition focus:border-blue-500 focus:ring-4 focus:ring-blue-100" value={incidentForm.severity} onChange={(event) => setIncidentForm({ ...incidentForm, severity: event.target.value })}>
                   <option value="low">Low</option>
                   <option value="medium">Medium</option>
                   <option value="high">High</option>
@@ -214,26 +252,15 @@ function App() {
               </div>
               <div className="space-y-1.5">
                 <label className="text-sm font-medium text-slate-700">Location</label>
-                <input
-                  className="w-full rounded-2xl border border-slate-300 px-4 py-3 outline-none transition focus:border-blue-500 focus:ring-4 focus:ring-blue-100"
-                  value={incidentForm.location}
-                  onChange={(event) => setIncidentForm({ ...incidentForm, location: event.target.value })}
-                />
+                <input className="w-full rounded-2xl border border-slate-300 px-4 py-3 outline-none transition focus:border-blue-500 focus:ring-4 focus:ring-blue-100" value={incidentForm.location} onChange={(event) => setIncidentForm({ ...incidentForm, location: event.target.value })} />
               </div>
               <div className="space-y-1.5">
                 <label className="text-sm font-medium text-slate-700">Description</label>
-                <textarea
-                  rows="4"
-                  className="w-full rounded-2xl border border-slate-300 px-4 py-3 outline-none transition focus:border-blue-500 focus:ring-4 focus:ring-blue-100"
-                  value={incidentForm.description}
-                  onChange={(event) => setIncidentForm({ ...incidentForm, description: event.target.value })}
-                />
+                <textarea rows="4" className="w-full rounded-2xl border border-slate-300 px-4 py-3 outline-none transition focus:border-blue-500 focus:ring-4 focus:ring-blue-100" value={incidentForm.description} onChange={(event) => setIncidentForm({ ...incidentForm, description: event.target.value })} />
               </div>
-              <div className="flex flex-wrap gap-3">
-                <button className="rounded-2xl bg-blue-600 px-5 py-3 font-semibold text-white transition hover:bg-blue-700" type="submit">
-                  Create incident
-                </button>
-              </div>
+              <button className="rounded-2xl bg-blue-600 px-5 py-3 font-semibold text-white transition hover:bg-blue-700" type="submit">
+                Create incident
+              </button>
             </form>
           </section>
 
@@ -243,11 +270,7 @@ function App() {
             <form className="mt-6 space-y-4" onSubmit={handleTaskSubmit}>
               <div className="space-y-1.5">
                 <label className="text-sm font-medium text-slate-700">Incident</label>
-                <select
-                  className="w-full rounded-2xl border border-slate-300 px-4 py-3 outline-none transition focus:border-blue-500 focus:ring-4 focus:ring-blue-100"
-                  value={taskForm.incident_id}
-                  onChange={(event) => setTaskForm({ ...taskForm, incident_id: event.target.value })}
-                >
+                <select className="w-full rounded-2xl border border-slate-300 px-4 py-3 outline-none transition focus:border-blue-500 focus:ring-4 focus:ring-blue-100" value={taskForm.incident_id} onChange={(event) => setTaskForm({ ...taskForm, incident_id: event.target.value })}>
                   <option value="">Select an incident</option>
                   {incidentOptions.map((option) => (
                     <option key={option.value} value={option.value}>{option.label}</option>
@@ -256,43 +279,141 @@ function App() {
               </div>
               <div className="space-y-1.5">
                 <label className="text-sm font-medium text-slate-700">Task title</label>
-                <input
-                  className="w-full rounded-2xl border border-slate-300 px-4 py-3 outline-none transition focus:border-blue-500 focus:ring-4 focus:ring-blue-100"
-                  value={taskForm.title}
-                  onChange={(event) => setTaskForm({ ...taskForm, title: event.target.value })}
-                />
+                <input className="w-full rounded-2xl border border-slate-300 px-4 py-3 outline-none transition focus:border-blue-500 focus:ring-4 focus:ring-blue-100" value={taskForm.title} onChange={(event) => setTaskForm({ ...taskForm, title: event.target.value })} />
               </div>
               <div className="space-y-1.5">
                 <label className="text-sm font-medium text-slate-700">Team</label>
-                <input
-                  className="w-full rounded-2xl border border-slate-300 px-4 py-3 outline-none transition focus:border-blue-500 focus:ring-4 focus:ring-blue-100"
-                  value={taskForm.team}
-                  onChange={(event) => setTaskForm({ ...taskForm, team: event.target.value })}
-                />
+                <input className="w-full rounded-2xl border border-slate-300 px-4 py-3 outline-none transition focus:border-blue-500 focus:ring-4 focus:ring-blue-100" value={taskForm.team} onChange={(event) => setTaskForm({ ...taskForm, team: event.target.value })} />
               </div>
               <div className="space-y-1.5">
                 <label className="text-sm font-medium text-slate-700">Priority</label>
-                <select
-                  className="w-full rounded-2xl border border-slate-300 px-4 py-3 outline-none transition focus:border-blue-500 focus:ring-4 focus:ring-blue-100"
-                  value={taskForm.priority}
-                  onChange={(event) => setTaskForm({ ...taskForm, priority: event.target.value })}
-                >
+                <select className="w-full rounded-2xl border border-slate-300 px-4 py-3 outline-none transition focus:border-blue-500 focus:ring-4 focus:ring-blue-100" value={taskForm.priority} onChange={(event) => setTaskForm({ ...taskForm, priority: event.target.value })}>
                   <option value="low">Low</option>
                   <option value="medium">Medium</option>
                   <option value="high">High</option>
                   <option value="critical">Critical</option>
                 </select>
               </div>
-              <div className="flex flex-wrap gap-3">
-                <button
-                  className="rounded-2xl bg-blue-600 px-5 py-3 font-semibold text-white transition hover:bg-blue-700 disabled:cursor-not-allowed disabled:bg-slate-300"
-                  type="submit"
-                  disabled={!taskForm.incident_id}
-                >
-                  Create task
-                </button>
-              </div>
+              <button className="rounded-2xl bg-blue-600 px-5 py-3 font-semibold text-white transition hover:bg-blue-700 disabled:cursor-not-allowed disabled:bg-slate-300" type="submit" disabled={!taskForm.incident_id}>
+                Create task
+              </button>
             </form>
+          </section>
+
+          <section className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm lg:col-span-2">
+            <div className="grid gap-6 lg:grid-cols-2">
+              <div>
+                <h2 className="text-xl font-semibold text-slate-900">Add Knowledge Document</h2>
+                <p className="mt-1 text-sm text-slate-500">Add SOPs, playbooks, and guidance that the RAG service can chunk and store in Qdrant.</p>
+                <form className="mt-6 space-y-4" onSubmit={handleKnowledgeSubmit}>
+                  <div className="grid gap-4 sm:grid-cols-2">
+                    <div className="space-y-1.5">
+                      <label className="text-sm font-medium text-slate-700">Title</label>
+                      <input className="w-full rounded-2xl border border-slate-300 px-4 py-3 outline-none transition focus:border-blue-500 focus:ring-4 focus:ring-blue-100" value={knowledgeForm.title} onChange={(event) => setKnowledgeForm({ ...knowledgeForm, title: event.target.value })} />
+                    </div>
+                    <div className="space-y-1.5">
+                      <label className="text-sm font-medium text-slate-700">Category</label>
+                      <input className="w-full rounded-2xl border border-slate-300 px-4 py-3 outline-none transition focus:border-blue-500 focus:ring-4 focus:ring-blue-100" value={knowledgeForm.category} onChange={(event) => setKnowledgeForm({ ...knowledgeForm, category: event.target.value })} />
+                    </div>
+                    <div className="space-y-1.5">
+                      <label className="text-sm font-medium text-slate-700">Incident type</label>
+                      <select className="w-full rounded-2xl border border-slate-300 px-4 py-3 outline-none transition focus:border-blue-500 focus:ring-4 focus:ring-blue-100" value={knowledgeForm.incident_type} onChange={(event) => setKnowledgeForm({ ...knowledgeForm, incident_type: event.target.value })}>
+                        <option value="flood">Flood</option>
+                        <option value="fire">Fire</option>
+                        <option value="earthquake">Earthquake</option>
+                        <option value="storm">Storm</option>
+                        <option value="heatwave">Heatwave</option>
+                        <option value="other">Other</option>
+                      </select>
+                    </div>
+                    <div className="space-y-1.5">
+                      <label className="text-sm font-medium text-slate-700">Source</label>
+                      <input className="w-full rounded-2xl border border-slate-300 px-4 py-3 outline-none transition focus:border-blue-500 focus:ring-4 focus:ring-blue-100" value={knowledgeForm.source} onChange={(event) => setKnowledgeForm({ ...knowledgeForm, source: event.target.value })} />
+                    </div>
+                  </div>
+                  <div className="space-y-1.5">
+                    <label className="text-sm font-medium text-slate-700">Content</label>
+                    <textarea rows="8" className="w-full rounded-2xl border border-slate-300 px-4 py-3 outline-none transition focus:border-blue-500 focus:ring-4 focus:ring-blue-100" value={knowledgeForm.content} onChange={(event) => setKnowledgeForm({ ...knowledgeForm, content: event.target.value })} />
+                  </div>
+                  <button className="rounded-2xl bg-slate-900 px-5 py-3 font-semibold text-white transition hover:bg-slate-800" type="submit">
+                    Add document to knowledge base
+                  </button>
+                </form>
+              </div>
+
+              <div>
+                <h2 className="text-xl font-semibold text-slate-900">Search Knowledge Base</h2>
+                <p className="mt-1 text-sm text-slate-500">Search for the most relevant chunks before Phase 5 starts using them in AI workflows.</p>
+                <form className="mt-6 space-y-4" onSubmit={handleKnowledgeSearch}>
+                  <div className="space-y-1.5">
+                    <label className="text-sm font-medium text-slate-700">Query</label>
+                    <input className="w-full rounded-2xl border border-slate-300 px-4 py-3 outline-none transition focus:border-blue-500 focus:ring-4 focus:ring-blue-100" value={searchForm.query} onChange={(event) => setSearchForm({ ...searchForm, query: event.target.value })} />
+                  </div>
+                  <div className="grid gap-4 sm:grid-cols-2">
+                    <div className="space-y-1.5">
+                      <label className="text-sm font-medium text-slate-700">Incident type filter</label>
+                      <select className="w-full rounded-2xl border border-slate-300 px-4 py-3 outline-none transition focus:border-blue-500 focus:ring-4 focus:ring-blue-100" value={searchForm.incident_type} onChange={(event) => setSearchForm({ ...searchForm, incident_type: event.target.value })}>
+                        <option value="all">All</option>
+                        <option value="flood">Flood</option>
+                        <option value="fire">Fire</option>
+                        <option value="earthquake">Earthquake</option>
+                        <option value="storm">Storm</option>
+                        <option value="heatwave">Heatwave</option>
+                        <option value="other">Other</option>
+                      </select>
+                    </div>
+                    <div className="space-y-1.5">
+                      <label className="text-sm font-medium text-slate-700">Result limit</label>
+                      <input type="number" min="1" max="10" className="w-full rounded-2xl border border-slate-300 px-4 py-3 outline-none transition focus:border-blue-500 focus:ring-4 focus:ring-blue-100" value={searchForm.limit} onChange={(event) => setSearchForm({ ...searchForm, limit: event.target.value })} />
+                    </div>
+                  </div>
+                  <button className="rounded-2xl bg-blue-600 px-5 py-3 font-semibold text-white transition hover:bg-blue-700" type="submit">
+                    Search knowledge
+                  </button>
+                </form>
+
+                <div className="mt-6 space-y-3">
+                  {searchResults.length === 0 ? <p className="text-sm text-slate-500">No retrieval results yet.</p> : null}
+                  {searchResults.map((result) => (
+                    <article className="rounded-2xl border border-slate-200 bg-slate-50 p-4" key={result.id}>
+                      <div className="flex flex-wrap items-center gap-2">
+                        <Badge value={result.incident_type} />
+                        <span className="rounded-full bg-slate-200 px-3 py-1 text-xs font-semibold text-slate-700">Score {result.score.toFixed(3)}</span>
+                      </div>
+                      <h3 className="mt-3 text-base font-semibold text-slate-900">{result.document_title}</h3>
+                      <p className="mt-1 text-xs text-slate-500">{result.source} · Chunk {result.chunk_index}</p>
+                      <p className="mt-3 text-sm leading-6 text-slate-700">{result.text}</p>
+                    </article>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <section className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm lg:col-span-2">
+            <div className="flex items-center justify-between gap-3">
+              <div>
+                <h2 className="text-xl font-semibold text-slate-900">Knowledge Documents</h2>
+                <p className="mt-1 text-sm text-slate-500">These are the documents that have been chunked and indexed for retrieval.</p>
+              </div>
+              <div className="rounded-2xl bg-slate-100 px-3 py-2 text-sm font-medium text-slate-600">{documents.length} total</div>
+            </div>
+            {loading ? <p className="mt-4 text-sm text-slate-500">Loading...</p> : null}
+            {!loading && documents.length === 0 ? <p className="mt-4 text-sm text-slate-500">No knowledge documents yet.</p> : null}
+            <div className="mt-6 grid gap-4 lg:grid-cols-2">
+              {documents.map((document) => (
+                <article className="rounded-3xl border border-slate-200 bg-slate-50 p-5" key={document.id}>
+                  <div className="mb-3 flex flex-wrap gap-2">
+                    <Badge value={document.incident_type} />
+                    <span className="rounded-full bg-slate-200 px-3 py-1 text-xs font-semibold text-slate-700">{document.category}</span>
+                    <span className="rounded-full bg-slate-200 px-3 py-1 text-xs font-semibold text-slate-700">{document.chunk_count} chunks</span>
+                  </div>
+                  <h3 className="text-lg font-semibold text-slate-900">{document.title}</h3>
+                  <p className="mt-1 text-sm text-slate-500">Source: {document.source}</p>
+                  <p className="mt-3 text-sm leading-6 text-slate-700">{document.content_preview}...</p>
+                </article>
+              ))}
+            </div>
           </section>
 
           <section className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
@@ -317,22 +438,13 @@ function App() {
                   <p className="mt-1 text-sm text-slate-500">{incident.location}</p>
                   <p className="mt-3 text-sm leading-6 text-slate-700">{incident.description}</p>
                   <div className="mt-4 flex flex-wrap gap-3">
-                    <button
-                      className="rounded-2xl bg-slate-200 px-4 py-2 text-sm font-medium text-slate-800 transition hover:bg-slate-300"
-                      onClick={() => updateIncidentStatus(incident.id, 'in_progress')}
-                    >
+                    <button className="rounded-2xl bg-slate-200 px-4 py-2 text-sm font-medium text-slate-800 transition hover:bg-slate-300" onClick={() => updateIncidentStatus(incident.id, 'in_progress')}>
                       Mark in progress
                     </button>
-                    <button
-                      className="rounded-2xl bg-emerald-100 px-4 py-2 text-sm font-medium text-emerald-800 transition hover:bg-emerald-200"
-                      onClick={() => updateIncidentStatus(incident.id, 'resolved')}
-                    >
+                    <button className="rounded-2xl bg-emerald-100 px-4 py-2 text-sm font-medium text-emerald-800 transition hover:bg-emerald-200" onClick={() => updateIncidentStatus(incident.id, 'resolved')}>
                       Resolve
                     </button>
-                    <button
-                      className="rounded-2xl bg-red-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-red-700"
-                      onClick={() => deleteIncident(incident.id)}
-                    >
+                    <button className="rounded-2xl bg-red-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-red-700" onClick={() => deleteIncident(incident.id)}>
                       Delete
                     </button>
                   </div>
@@ -362,22 +474,13 @@ function App() {
                   <p className="mt-1 text-sm text-slate-500">Team: {task.team}</p>
                   <p className="mt-1 break-all text-xs text-slate-400">Incident ID: {task.incident_id}</p>
                   <div className="mt-4 flex flex-wrap gap-3">
-                    <button
-                      className="rounded-2xl bg-slate-200 px-4 py-2 text-sm font-medium text-slate-800 transition hover:bg-slate-300"
-                      onClick={() => updateTaskStatus(task.id, 'in_progress')}
-                    >
+                    <button className="rounded-2xl bg-slate-200 px-4 py-2 text-sm font-medium text-slate-800 transition hover:bg-slate-300" onClick={() => updateTaskStatus(task.id, 'in_progress')}>
                       Start
                     </button>
-                    <button
-                      className="rounded-2xl bg-emerald-100 px-4 py-2 text-sm font-medium text-emerald-800 transition hover:bg-emerald-200"
-                      onClick={() => updateTaskStatus(task.id, 'done')}
-                    >
+                    <button className="rounded-2xl bg-emerald-100 px-4 py-2 text-sm font-medium text-emerald-800 transition hover:bg-emerald-200" onClick={() => updateTaskStatus(task.id, 'done')}>
                       Complete
                     </button>
-                    <button
-                      className="rounded-2xl bg-red-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-red-700"
-                      onClick={() => deleteTask(task.id)}
-                    >
+                    <button className="rounded-2xl bg-red-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-red-700" onClick={() => deleteTask(task.id)}>
                       Delete
                     </button>
                   </div>
@@ -400,9 +503,7 @@ function App() {
                 <article className="rounded-2xl border border-slate-200 bg-slate-50 p-4" key={notification.id}>
                   <div className="flex flex-wrap items-center gap-2">
                     <Badge value={notification.level === 'critical' ? 'critical' : notification.level === 'warning' ? 'high' : 'low'} />
-                    <span className="rounded-full bg-slate-200 px-3 py-1 text-xs font-semibold text-slate-700">
-                      {notification.source_event}
-                    </span>
+                    <span className="rounded-full bg-slate-200 px-3 py-1 text-xs font-semibold text-slate-700">{notification.source_event}</span>
                   </div>
                   <h3 className="mt-3 text-base font-semibold text-slate-900">{notification.title}</h3>
                   <p className="mt-1 text-sm text-slate-600">{notification.message}</p>

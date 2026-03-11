@@ -56,5 +56,23 @@ class ServiceClients:
             response.raise_for_status()
             return response.json()
 
+    async def get_documents(self) -> list[dict]:
+        async with httpx.AsyncClient(timeout=10.0) as client:
+            response = await client.get(f"{settings.rag_service_url}/documents")
+            response.raise_for_status()
+            return response.json()
+
+    async def create_document(self, payload: dict) -> dict:
+        async with httpx.AsyncClient(timeout=20.0) as client:
+            response = await client.post(f"{settings.rag_service_url}/documents", json=payload)
+            response.raise_for_status()
+            return response.json()
+
+    async def search_knowledge(self, payload: dict) -> dict:
+        async with httpx.AsyncClient(timeout=20.0) as client:
+            response = await client.post(f"{settings.rag_service_url}/search", json=payload)
+            response.raise_for_status()
+            return response.json()
+
 
 clients = ServiceClients()

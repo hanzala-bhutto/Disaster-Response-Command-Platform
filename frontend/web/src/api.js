@@ -31,4 +31,7 @@ export const api = {
   updateTask: (id, payload) => request(`/tasks/${id}`, { method: 'PATCH', body: JSON.stringify(payload) }),
   deleteTask: (id) => request(`/tasks/${id}`, { method: 'DELETE' }),
   listNotifications: () => request('/notifications'),
+  listKnowledgeDocuments: () => request('/knowledge/documents'),
+  createKnowledgeDocument: (payload) => request('/knowledge/documents', { method: 'POST', body: JSON.stringify(payload) }),
+  searchKnowledge: (payload) => request('/knowledge/search', { method: 'POST', body: JSON.stringify(payload) }),
 };
