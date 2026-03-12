@@ -1,6 +1,6 @@
 # Learning Map
 
-## What this project teaches
+##  What this project teaches
 
 ### Frontend
 - React component structure
