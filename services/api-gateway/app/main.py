@@ -18,7 +18,7 @@ app.add_middleware(
 
 @app.get("/health")
 def health() -> dict:
-    return {"service": "api-gateway", "status": "ok", "phase": 2}
+    return {"service": "api-gateway", "status": "ok", "phase": 5}
 
 
 @app.get("/incidents")
@@ -81,6 +81,16 @@ async def create_document(payload: dict) -> dict:
 @app.post("/knowledge/search")
 async def search_knowledge(payload: dict) -> dict:
     return await clients.search_knowledge(payload)
+
+
+@app.post("/ai/workflows/run")
+async def run_ai_workflow(payload: dict) -> dict:
+    return await clients.run_ai_workflow(payload)
+
+
+@app.get("/ai/workflow-runs")
+async def list_ai_workflow_runs() -> dict:
+    return await clients.get_ai_workflow_runs()
 
 
 @app.exception_handler(httpx.HTTPStatusError)

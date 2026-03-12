@@ -69,6 +69,8 @@ Build controlled agentic workflows.
 - response plan workflow
 - advisory draft workflow
 - structured LLM prompts and outputs
+- AI workflow panel in the dashboard
+- fallback mode when no LLM key is configured
 
 ### What you learn
 - AI workflow design

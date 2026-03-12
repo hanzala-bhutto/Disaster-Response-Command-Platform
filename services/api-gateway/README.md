@@ -23,6 +23,8 @@ Acts as the main backend entry point for the frontend.
 - `GET /knowledge/documents`
 - `POST /knowledge/documents`
 - `POST /knowledge/search`
+- `POST /ai/workflows/run`
+- `GET /ai/workflow-runs`
 
 ## Events published
 None for now.
@@ -39,3 +41,4 @@ None for now.
 - `COORDINATION_SERVICE_URL`
 - `NOTIFICATION_SERVICE_URL`
 - `RAG_SERVICE_URL`
+- `AI_ORCHESTRATOR_URL`

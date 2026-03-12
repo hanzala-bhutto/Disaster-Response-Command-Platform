@@ -20,6 +20,67 @@ When a user searches:
 3. Qdrant returns similar chunks
 4. the frontend shows those evidence chunks
 
+## Diagram: RAG system overview
+```mermaid
+flowchart LR
+	U[User] --> FE[React Frontend]
+	FE --> GW[API Gateway]
+	GW --> RS[RAG Service]
+	RS --> CH[Chunking]
+	RS --> EM[Embedding]
+	EM --> Q[(Qdrant)]
+	Q --> RS
+	RS --> FE
+```
+
+## Diagram: knowledge ingestion flow
+```mermaid
+sequenceDiagram
+	participant User
+	participant Frontend as React Frontend
+	participant Gateway as API Gateway
+	participant Rag as RAG Service
+	participant Qdrant
+
+	User->>Frontend: Submit knowledge document
+	Frontend->>Gateway: POST /knowledge/documents
+	Gateway->>Rag: Forward document
+	Rag->>Rag: Split into chunks
+	Rag->>Rag: Create vectors for chunks
+	Rag->>Qdrant: Upsert chunk vectors and metadata
+	Qdrant-->>Rag: Store success
+	Rag-->>Gateway: Document metadata
+	Gateway-->>Frontend: Document created
+```
+
+## Diagram: knowledge retrieval flow
+```mermaid
+sequenceDiagram
+	participant User
+	participant Frontend as React Frontend
+	participant Gateway as API Gateway
+	participant Rag as RAG Service
+	participant Qdrant
+
+	User->>Frontend: Enter search query
+	Frontend->>Gateway: POST /knowledge/search
+	Gateway->>Rag: Forward search request
+	Rag->>Rag: Embed query
+	Rag->>Qdrant: Search nearest chunks
+	Qdrant-->>Rag: Matching chunks with scores
+	Rag-->>Gateway: Retrieval results
+	Gateway-->>Frontend: Evidence list
+```
+
+## Diagram: relation to Phase 5
+```mermaid
+flowchart TD
+	A[Incident Data] --> C[AI Orchestrator in Phase 5]
+	B[Retrieved Evidence from Qdrant] --> C
+	C --> D[LLM Prompt with Grounded Context]
+	D --> E[Structured AI Answer]
+```
+
 ## Why this matters
 This phase separates retrieval from generation.
 That is important because RAG has two major parts:

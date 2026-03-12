@@ -20,6 +20,67 @@ When a new incident is created:
 6. the notification service consumes both events
 7. the frontend shows notifications through the gateway
 
+## Diagram: system overview
+```mermaid
+flowchart LR
+	U[User] --> FE[React Frontend]
+	FE --> GW[API Gateway]
+	GW --> IS[Incident Service]
+	GW --> CS[Coordination Service]
+	GW --> NS[Notification Service]
+
+	IS --> DB1[(In-Memory Incident Store)]
+	CS --> DB2[(In-Memory Task Store)]
+	NS --> DB3[(In-Memory Notification Store)]
+
+	IS -- incident.created --> MQ[(RabbitMQ)]
+	MQ -- incident.created --> CS
+	CS -- task.created --> MQ
+	MQ -- incident.created --> NS
+	MQ -- task.created --> NS
+```
+
+## Diagram: incident event flow
+```mermaid
+sequenceDiagram
+	participant User
+	participant Frontend as React Frontend
+	participant Gateway as API Gateway
+	participant Incident as Incident Service
+	participant RabbitMQ
+	participant Coordination as Coordination Service
+	participant Notification as Notification Service
+
+	User->>Frontend: Submit incident form
+	Frontend->>Gateway: POST /incidents
+	Gateway->>Incident: Forward request
+	Incident->>Incident: Store incident
+	Incident-->>Gateway: Incident response
+	Gateway-->>Frontend: Incident created
+	Incident->>RabbitMQ: Publish incident.created
+	RabbitMQ->>Coordination: Deliver incident.created
+	Coordination->>Coordination: Auto-create starter task
+	Coordination->>RabbitMQ: Publish task.created
+	RabbitMQ->>Notification: Deliver incident.created
+	RabbitMQ->>Notification: Deliver task.created
+	Frontend->>Gateway: GET /notifications
+	Gateway->>Notification: Fetch notifications
+	Notification-->>Gateway: Notification list
+	Gateway-->>Frontend: Notification list
+```
+
+## Diagram: HTTP vs event flow
+```mermaid
+flowchart TD
+	A[Frontend Request] --> B{Need immediate response?}
+	B -- Yes --> C[Use HTTP through API Gateway]
+	C --> D[Incident Service / Task Service / Notification Service]
+
+	B -- No, this is background reaction --> E[Publish event to RabbitMQ]
+	E --> F[Other services consume event]
+	F --> G[Create tasks / notifications / future AI triggers]
+```
+
 ## Why this matters
 This is important because the system becomes more modular.
 

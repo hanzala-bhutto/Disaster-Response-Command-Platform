@@ -34,4 +34,6 @@ export const api = {
   listKnowledgeDocuments: () => request('/knowledge/documents'),
   createKnowledgeDocument: (payload) => request('/knowledge/documents', { method: 'POST', body: JSON.stringify(payload) }),
   searchKnowledge: (payload) => request('/knowledge/search', { method: 'POST', body: JSON.stringify(payload) }),
+  runAiWorkflow: (payload) => request('/ai/workflows/run', { method: 'POST', body: JSON.stringify(payload) }),
+  listAiWorkflowRuns: () => request('/ai/workflow-runs'),
 };

@@ -74,5 +74,17 @@ class ServiceClients:
             response.raise_for_status()
             return response.json()
 
+    async def run_ai_workflow(self, payload: dict) -> dict:
+        async with httpx.AsyncClient(timeout=30.0) as client:
+            response = await client.post(f"{settings.ai_orchestrator_url}/workflows/run", json=payload)
+            response.raise_for_status()
+            return response.json()
+
+    async def get_ai_workflow_runs(self) -> dict:
+        async with httpx.AsyncClient(timeout=20.0) as client:
+            response = await client.get(f"{settings.ai_orchestrator_url}/workflow-runs")
+            response.raise_for_status()
+            return response.json()
+
 
 clients = ServiceClients()
