@@ -14,7 +14,7 @@ Creates alerts and notification records for the dashboard.
 - `GET /notifications`
 
 ## Events published
-- `notification.created` later
+None for now.
 
 ## Events consumed
 - `incident.created`
@@ -23,7 +23,12 @@ Creates alerts and notification records for the dashboard.
 ## How to run locally
 1. install dependencies from `requirements.txt`
 2. run `uvicorn app.main:app --reload --port 8003`
+3. for Kubernetes, build the container image from `Dockerfile`
 
 ## Environment variables
 - `RABBITMQ_URL`
 - `RABBITMQ_EXCHANGE`
+- `NOTIFICATION_QUEUE_NAME`
+
+## Container port
+- `8003`

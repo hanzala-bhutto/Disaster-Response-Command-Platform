@@ -13,13 +13,18 @@ Accepts simulated disaster events and prepares them for the system.
 - `GET /health`
 
 ## Events published
-- event publication will be added later
+None for now.
 
 ## Events consumed
 None for now.
 
 ## How to run locally
-This will be added later.
+1. install dependencies from `requirements.txt`
+2. run `uvicorn app.main:app --reload --port 8006`
+3. for Kubernetes, build the container image from `Dockerfile`
 
 ## Environment variables
-This will be added later.
+None for now.
+
+## Container port
+- `8006`

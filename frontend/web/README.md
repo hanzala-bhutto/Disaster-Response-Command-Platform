@@ -26,10 +26,14 @@ This is the React dashboard for disaster operators.
 2. start the app with `npm run dev`
 3. set `VITE_API_BASE_URL` if the gateway runs on a different URL
 4. Tailwind CSS is configured through the Vite plugin
+5. for Kubernetes, build the container image from `Dockerfile`
 
-## What is in Phase 2
+## Included in the current UI
 - incident creation form
 - task creation form
 - incident list
 - task list
 - simple status updates
+
+## Container port
+- `80`

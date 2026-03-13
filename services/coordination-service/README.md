@@ -18,17 +18,23 @@ Creates and manages response tasks for incidents.
 - `DELETE /tasks/{task_id}`
 
 ## Events published
-- `task.created` later
+- `task.created`
 
 ## Events consumed
 - `incident.created`
 
-## RabbitMQ in Phase 3
+## RabbitMQ behavior
 This service listens for `incident.created` and auto-creates a starter task.
 
 ## How to run locally
 1. install dependencies from `requirements.txt`
 2. run `uvicorn app.main:app --reload --port 8002`
+3. for Kubernetes, build the container image from `Dockerfile`
 
 ## Environment variables
-This will be added later.
+- `RABBITMQ_URL`
+- `RABBITMQ_EXCHANGE`
+- `INCIDENT_QUEUE_NAME`
+
+## Container port
+- `8002`

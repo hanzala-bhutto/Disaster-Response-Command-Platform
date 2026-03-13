@@ -19,11 +19,10 @@ Stores and manages disaster incidents.
 - `DELETE /incidents/{incident_id}`
 
 ## Events published
-- `incident.created` later
-- `incident.updated` later
+- `incident.created`
 
-## RabbitMQ in Phase 3
-When a new incident is created, this service now publishes `incident.created`.
+## RabbitMQ behavior
+When a new incident is created, this service publishes `incident.created`.
 
 ## Events consumed
 None for now.
@@ -31,6 +30,11 @@ None for now.
 ## How to run locally
 1. install dependencies from `requirements.txt`
 2. run `uvicorn app.main:app --reload --port 8001`
+3. for Kubernetes, build the container image from `Dockerfile`
 
 ## Environment variables
-This will be added later.
+- `RABBITMQ_URL`
+- `RABBITMQ_EXCHANGE`
+
+## Container port
+- `8001`
