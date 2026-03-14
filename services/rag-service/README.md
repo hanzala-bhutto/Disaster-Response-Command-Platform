@@ -16,6 +16,7 @@ Indexes emergency documents and retrieves useful context using Qdrant.
 - `GET /documents`
 - `POST /documents`
 - `POST /search`
+- `GET /metrics`
 
 ## Events published
 None for now.

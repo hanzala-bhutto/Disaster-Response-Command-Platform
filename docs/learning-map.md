@@ -36,6 +36,9 @@
 - Docker
 - Kubernetes
 - configuration and secrets
+- Prometheus metrics
+- Grafana dashboards
+- operational monitoring
 
 ## Best way to learn from this project
 For every phase, answer these questions:

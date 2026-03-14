@@ -92,5 +92,22 @@ Deploy the system locally on Kubernetes.
 - deployments and services
 - infrastructure basics
 
+## Phase 7 - Observability
+### Goal
+Add operational visibility with metrics, dashboards, and monitoring endpoints.
+
+### Deliverables
+- `/metrics` endpoint on each FastAPI service
+- Prometheus scrape and storage setup
+- Grafana dashboards for platform health
+- RabbitMQ exporter metrics
+- monitoring runbook and architecture guide
+
+### What you learn
+- what service metrics are
+- how Prometheus scraping works
+- how Grafana dashboards are provisioned
+- how to observe HTTP, event, RAG, and AI workflow behavior
+
 ## Recommended order
 Always finish one small end-to-end slice before adding new complexity.

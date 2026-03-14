@@ -28,6 +28,11 @@ spec:
       containers:
         - name: rabbitmq
           image: rabbitmq:3.13-management
+          env:
+            - name: RABBITMQ_DEFAULT_USER
+              value: platform
+            - name: RABBITMQ_DEFAULT_PASS
+              value: platformpass
           ports:
             - containerPort: 5672
               name: amqp

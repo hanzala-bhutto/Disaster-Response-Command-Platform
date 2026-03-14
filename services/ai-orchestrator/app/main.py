@@ -2,15 +2,17 @@ from fastapi import FastAPI
 from fastapi.responses import JSONResponse
 import httpx
 
+from .metrics import configure_metrics
 from .schemas import WorkflowHistory, WorkflowRequest, WorkflowResult
 from .service import service
 
 app = FastAPI(title="AI Orchestrator")
+configure_metrics(app)
 
 
 @app.get("/health")
 def health() -> dict:
-    return {"service": "ai-orchestrator", "status": "ok", "phase": 5}
+    return {"service": "ai-orchestrator", "status": "ok", "phase": 7}
 
 
 @app.get("/workflow-runs", response_model=WorkflowHistory)

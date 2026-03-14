@@ -3,16 +3,18 @@ from uuid import UUID
 from fastapi import FastAPI, HTTPException, Response, status
 
 from .event_bus import safe_publish
+from .metrics import configure_metrics
 from .schemas import Incident, IncidentCreate, IncidentUpdate
 from .service import IncidentService
 
 app = FastAPI(title="Incident Service")
+configure_metrics(app)
 service = IncidentService()
 
 
 @app.get("/health")
 def health() -> dict:
-    return {"service": "incident-service", "status": "ok", "phase": 3}
+    return {"service": "incident-service", "status": "ok", "phase": 7}
 
 
 @app.get("/incidents", response_model=list[Incident])

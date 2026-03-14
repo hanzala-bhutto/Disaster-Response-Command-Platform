@@ -6,6 +6,7 @@ from qdrant_client import models
 
 from .chunking import chunk_text
 from .embedding import embedding_service
+from .metrics import record_document_ingested, record_search, set_document_store_size
 from .repository import repository
 from .schemas import KnowledgeChunkResult, KnowledgeDocument, KnowledgeDocumentCreate, SearchRequest, SearchResponse
 from .settings_data import settings
@@ -81,6 +82,8 @@ class RagService:
         )
         with self._lock:
             self._documents[document_id] = document
+            set_document_store_size(len(self._documents))
+        record_document_ingested(payload.category, payload.incident_type, len(chunks))
         return document
 
     def search(self, payload: SearchRequest) -> SearchResponse:
@@ -100,4 +103,5 @@ class RagService:
             )
             for result in results
         ]
+        record_search(payload.incident_type, len(matches))
         return SearchResponse(query=payload.query, matches=matches)

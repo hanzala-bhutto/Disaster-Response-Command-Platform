@@ -1,9 +1,11 @@
 import asyncio
 from datetime import datetime, timezone
 from threading import Lock
+from time import perf_counter
 
 from .clients import clients
 from .llm_client import llm_client
+from .metrics import record_workflow_run, set_workflow_history_size
 from .prompts import build_prompt
 from .schemas import EvidenceItem, WorkflowHistory, WorkflowRequest, WorkflowResult
 
@@ -12,12 +14,14 @@ class OrchestratorService:
     def __init__(self) -> None:
         self._lock = Lock()
         self._runs: list[WorkflowResult] = []
+        set_workflow_history_size(0)
 
     def list_runs(self) -> WorkflowHistory:
         with self._lock:
             return WorkflowHistory(runs=list(self._runs))
 
     async def run_workflow(self, payload: WorkflowRequest) -> WorkflowResult:
+        start_time = perf_counter()
         incident, tasks, notifications = await asyncio.gather(
             clients.get_incident(str(payload.incident_id)),
             clients.get_tasks(),
@@ -52,6 +56,8 @@ class OrchestratorService:
 
         with self._lock:
             self._runs.insert(0, result)
+            set_workflow_history_size(len(self._runs))
+        record_workflow_run(payload.workflow_type, result.mode, perf_counter() - start_time)
         return result
 
     def _build_result(self, payload: WorkflowRequest, evidence: list[EvidenceItem], response: dict, mode: str) -> WorkflowResult:

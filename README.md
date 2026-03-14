@@ -9,6 +9,7 @@ A disaster operations platform built to demonstrate:
 - Qdrant RAG
 - agentic AI workflows
 - Kubernetes deployment
+- observability with Prometheus and Grafana
 
 ## Simple idea
 This platform receives disaster incidents like floods or fires and turns them into:
@@ -43,16 +44,19 @@ This platform receives disaster incidents like floods or fires and turns them in
 4. Phase 4 - RAG with Qdrant
 5. Phase 5 - AI orchestration
 6. Phase 6 - Kubernetes deployment
+7. Phase 7 - observability and monitoring
 
 ## Current status
-Phase 6 deployment assets are implemented.
+Phase 7 observability assets are implemented.
 
 ## What to read first
 - `docs/master-plan.md`
 - `docs/phases.md`
 - `docs/learning-map.md`
 - `docs/phase-6-architecture.md`
+- `docs/phase-7-architecture.md`
 - `infra/k8s/base/README.md`
+- `infra/k8s/monitoring/README.md`
 
 ## Goal
 Build one flow end to end:
@@ -70,8 +74,17 @@ Phase 6 adds:
 - ConfigMaps, Secrets, persistent volumes, and ingress
 - a local cluster runbook in `infra/k8s/base/README.md`
 
+## Observability
+Phase 7 adds:
+- `/metrics` endpoints on all FastAPI services
+- Prometheus scrape configuration for application and infrastructure metrics
+- Grafana provisioning with a platform overview dashboard
+- RabbitMQ exporter metrics for broker visibility
+- a monitoring runbook in `infra/k8s/monitoring/README.md`
+
 ## Architecture references
 - `docs/phase-3-architecture.md`
 - `docs/phase-4-architecture.md`
 - `docs/phase-5-architecture.md`
 - `docs/phase-6-architecture.md`
+- `docs/phase-7-architecture.md`

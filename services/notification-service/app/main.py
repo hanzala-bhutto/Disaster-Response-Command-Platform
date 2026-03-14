@@ -3,10 +3,12 @@ from uuid import UUID
 from fastapi import FastAPI
 
 from .event_bus import start_notification_consumer
+from .metrics import configure_metrics
 from .schemas import Notification
 from .service import NotificationService
 
 app = FastAPI(title="Notification Service")
+configure_metrics(app)
 service = NotificationService()
 
 
@@ -42,7 +44,7 @@ def startup_consumer() -> None:
 
 @app.get("/health")
 def health() -> dict:
-    return {"service": "notification-service", "status": "ok", "phase": 3}
+    return {"service": "notification-service", "status": "ok", "phase": 7}
 
 
 @app.get("/notifications", response_model=list[Notification])

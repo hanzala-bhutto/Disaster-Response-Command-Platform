@@ -16,6 +16,7 @@ Creates and manages response tasks for incidents.
 - `POST /tasks`
 - `PATCH /tasks/{task_id}`
 - `DELETE /tasks/{task_id}`
+- `GET /metrics`
 
 ## Events published
 - `task.created`

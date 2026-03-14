@@ -1,0 +1,57 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: rabbitmq-exporter
+  namespace: disaster-response
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: rabbitmq-exporter
+  template:
+    metadata:
+      labels:
+        app: rabbitmq-exporter
+    spec:
+      containers:
+        - name: rabbitmq-exporter
+          image: kbudde/rabbitmq-exporter:v1.0.0-RC19
+          env:
+            - name: RABBIT_URL
+              value: http://rabbitmq:15672
+            - name: RABBIT_USER
+              value: platform
+            - name: RABBIT_PASSWORD
+              value: platformpass
+            - name: PUBLISH_PORT
+              value: "9419"
+            - name: OUTPUT_FORMAT
+              value: prometheus
+          ports:
+            - containerPort: 9419
+              name: http
+          readinessProbe:
+            httpGet:
+              path: /metrics
+              port: http
+            initialDelaySeconds: 10
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /metrics
+              port: http
+            initialDelaySeconds: 30
+            periodSeconds: 20
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: rabbitmq-exporter
+  namespace: disaster-response
+spec:
+  selector:
+    app: rabbitmq-exporter
+  ports:
+    - name: http
+      port: 9419
+      targetPort: http

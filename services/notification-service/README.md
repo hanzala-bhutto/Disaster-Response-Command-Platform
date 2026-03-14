@@ -12,6 +12,7 @@ Creates alerts and notification records for the dashboard.
 ## Main endpoints
 - `GET /health`
 - `GET /notifications`
+- `GET /metrics`
 
 ## Events published
 None for now.

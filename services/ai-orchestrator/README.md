@@ -15,6 +15,7 @@ Runs simple AI workflows for triage, planning, and drafting.
 - `GET /health`
 - `GET /workflow-runs`
 - `POST /workflows/run`
+- `GET /metrics`
 
 ## Events published
 None for now.

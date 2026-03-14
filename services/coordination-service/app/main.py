@@ -3,10 +3,12 @@ from uuid import UUID
 from fastapi import FastAPI, HTTPException, Response, status
 
 from .event_bus import safe_publish, start_incident_consumer
+from .metrics import configure_metrics
 from .schemas import Task, TaskCreate, TaskUpdate
 from .service import TaskService
 
 app = FastAPI(title="Coordination Service")
+configure_metrics(app)
 service = TaskService()
 
 
@@ -41,7 +43,7 @@ def startup_consumer() -> None:
 
 @app.get("/health")
 def health() -> dict:
-    return {"service": "coordination-service", "status": "ok", "phase": 3}
+    return {"service": "coordination-service", "status": "ok", "phase": 7}
 
 
 @app.get("/tasks", response_model=list[Task])

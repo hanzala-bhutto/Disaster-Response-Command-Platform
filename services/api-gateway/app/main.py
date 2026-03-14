@@ -4,8 +4,10 @@ from fastapi.responses import JSONResponse
 import httpx
 
 from .clients import clients
+from .metrics import configure_metrics
 
 app = FastAPI(title="API Gateway")
+configure_metrics(app)
 
 app.add_middleware(
     CORSMiddleware,
@@ -18,7 +20,7 @@ app.add_middleware(
 
 @app.get("/health")
 def health() -> dict:
-    return {"service": "api-gateway", "status": "ok", "phase": 5}
+    return {"service": "api-gateway", "status": "ok", "phase": 7}
 
 
 @app.get("/incidents")

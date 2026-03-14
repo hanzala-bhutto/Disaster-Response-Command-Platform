@@ -4,6 +4,7 @@ from typing import Any
 import pika
 from pika.exceptions import AMQPError
 
+from .metrics import record_event_publish
 from .settings_data import settings
 
 
@@ -28,6 +29,8 @@ publisher = EventPublisher()
 def safe_publish(routing_key: str, payload: dict[str, Any]) -> bool:
     try:
         publisher.publish(routing_key, payload)
+        record_event_publish(routing_key, "success")
         return True
     except AMQPError:
+        record_event_publish(routing_key, "error")
         return False

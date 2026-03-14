@@ -6,6 +6,7 @@ from typing import Any, Callable
 import pika
 from pika.exceptions import AMQPError
 
+from .metrics import record_event_consumed, record_event_publish
 from .settings_data import settings
 
 logger = logging.getLogger(__name__)
@@ -32,9 +33,11 @@ publisher = EventPublisher()
 def safe_publish(routing_key: str, payload: dict[str, Any]) -> bool:
     try:
         publisher.publish(routing_key, payload)
+        record_event_publish(routing_key, "success")
         return True
     except AMQPError:
         logger.exception("Failed to publish event", extra={"routing_key": routing_key})
+        record_event_publish(routing_key, "error")
         return False
 
 
@@ -54,8 +57,14 @@ def start_incident_consumer(on_message: Callable[[dict[str, Any]], None]) -> Non
 
             def callback(ch, _method, _properties, body: bytes) -> None:
                 payload = json.loads(body.decode("utf-8"))
-                on_message(payload)
-                ch.basic_ack(delivery_tag=_method.delivery_tag)
+                try:
+                    on_message(payload)
+                except Exception:
+                    record_event_consumed("incident.created", "error")
+                    raise
+                else:
+                    record_event_consumed("incident.created", "success")
+                    ch.basic_ack(delivery_tag=_method.delivery_tag)
 
             channel.basic_qos(prefetch_count=1)
             channel.basic_consume(queue=settings.incident_queue_name, on_message_callback=callback)

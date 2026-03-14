@@ -11,6 +11,7 @@ Accepts simulated disaster events and prepares them for the system.
 
 ## Main endpoints
 - `GET /health`
+- `GET /metrics`
 
 ## Events published
 None for now.

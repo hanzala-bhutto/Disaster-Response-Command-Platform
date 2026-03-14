@@ -32,4 +32,6 @@ The default `secrets.yaml` keeps the AI orchestrator in fallback mode. Add a rea
 
 ## References
 - `docs/phase-6-architecture.md`
+- `docs/phase-7-architecture.md`
+- `infra/k8s/monitoring/README.md`
 - `README.md`

@@ -4,7 +4,10 @@ metadata:
   name: platform-config
   namespace: disaster-response
 data:
-  RABBITMQ_URL: amqp://guest:guest@rabbitmq:5672/%2F
+  RABBITMQ_URL: amqp://platform:platformpass@rabbitmq:5672/%2F
+  RABBITMQ_HTTP_URL: http://rabbitmq:15672
+  RABBITMQ_USERNAME: platform
+  RABBITMQ_PASSWORD: platformpass
   RABBITMQ_EXCHANGE: disaster_events
   INCIDENT_QUEUE_NAME: coordination.incident.created
   NOTIFICATION_QUEUE_NAME: notification.events

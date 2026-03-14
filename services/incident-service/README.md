@@ -17,6 +17,7 @@ Stores and manages disaster incidents.
 - `POST /incidents`
 - `PATCH /incidents/{incident_id}`
 - `DELETE /incidents/{incident_id}`
+- `GET /metrics`
 
 ## Events published
 - `incident.created`

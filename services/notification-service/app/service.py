@@ -2,6 +2,7 @@ from datetime import datetime, timezone
 from threading import Lock
 from uuid import UUID, uuid4
 
+from .metrics import record_notification_created, set_notification_store_size
 from .schemas import Notification
 
 
@@ -9,6 +10,7 @@ class NotificationService:
     def __init__(self) -> None:
         self._lock = Lock()
         self._notifications: list[Notification] = []
+        set_notification_store_size(0)
 
     def list_notifications(self) -> list[Notification]:
         with self._lock:
@@ -36,4 +38,6 @@ class NotificationService:
         )
         with self._lock:
             self._notifications.insert(0, notification)
+            set_notification_store_size(len(self._notifications))
+        record_notification_created(source_event, level)
         return notification

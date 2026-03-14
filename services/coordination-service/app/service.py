@@ -2,6 +2,7 @@ from datetime import datetime, timezone
 from threading import Lock
 from uuid import UUID, uuid4
 
+from .metrics import record_task_mutation, set_task_store_size
 from .schemas import Task, TaskCreate, TaskUpdate
 
 
@@ -31,6 +32,8 @@ class TaskService:
         )
         with self._lock:
             self._tasks[task.id] = task
+            set_task_store_size(len(self._tasks))
+        record_task_mutation("create", task.team, task.priority)
         return task
 
     def update_task(self, task_id: UUID, payload: TaskUpdate) -> Task | None:
@@ -42,6 +45,7 @@ class TaskService:
         updated = task.model_copy(update=payload.model_dump(exclude_none=True))
         with self._lock:
             self._tasks[task_id] = updated
+        record_task_mutation("update", updated.team, updated.priority)
         return updated
 
     def delete_task(self, task_id: UUID) -> bool:
@@ -49,5 +53,8 @@ class TaskService:
             if task_id not in self._tasks:
                 return False
 
+            task = self._tasks[task_id]
             del self._tasks[task_id]
-            return True
+            set_task_store_size(len(self._tasks))
+        record_task_mutation("delete", task.team, task.priority)
+        return True

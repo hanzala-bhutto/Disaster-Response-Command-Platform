@@ -25,6 +25,7 @@ Acts as the main backend entry point for the frontend.
 - `POST /knowledge/search`
 - `POST /ai/workflows/run`
 - `GET /ai/workflow-runs`
+- `GET /metrics`
 
 ## Events published
 None for now.
