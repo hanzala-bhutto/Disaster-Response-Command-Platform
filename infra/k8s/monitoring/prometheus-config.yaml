@@ -63,8 +63,8 @@ data:
           - targets:
               - qdrant:6333
 
-      - job_name: rabbitmq-exporter
+      - job_name: kafka-exporter
         metrics_path: /metrics
         static_configs:
           - targets:
-              - rabbitmq-exporter:9419
+              - kafka-exporter:9308

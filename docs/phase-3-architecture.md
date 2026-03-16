@@ -8,7 +8,7 @@ Before Phase 3, the system was mainly request-response:
 - the gateway called backend services
 - services returned data immediately
 
-In Phase 3, we added RabbitMQ so services can also communicate through events.
+In Phase 3, we added Kafka so services can also communicate through durable event streams.
 
 ## Main idea
 When a new incident is created:
@@ -33,7 +33,7 @@ flowchart LR
 	CS --> DB2[(In-Memory Task Store)]
 	NS --> DB3[(In-Memory Notification Store)]
 
-	IS -- incident.created --> MQ[(RabbitMQ)]
+	IS -- incident.created --> MQ[(Kafka)]
 	MQ -- incident.created --> CS
 	CS -- task.created --> MQ
 	MQ -- incident.created --> NS
@@ -47,7 +47,7 @@ sequenceDiagram
 	participant Frontend as React Frontend
 	participant Gateway as API Gateway
 	participant Incident as Incident Service
-	participant RabbitMQ
+	participant Kafka
 	participant Coordination as Coordination Service
 	participant Notification as Notification Service
 
@@ -57,12 +57,12 @@ sequenceDiagram
 	Incident->>Incident: Store incident
 	Incident-->>Gateway: Incident response
 	Gateway-->>Frontend: Incident created
-	Incident->>RabbitMQ: Publish incident.created
-	RabbitMQ->>Coordination: Deliver incident.created
+	Incident->>Kafka: Append incident.created
+	Kafka->>Coordination: Deliver incident.created
 	Coordination->>Coordination: Auto-create starter task
-	Coordination->>RabbitMQ: Publish task.created
-	RabbitMQ->>Notification: Deliver incident.created
-	RabbitMQ->>Notification: Deliver task.created
+	Coordination->>Kafka: Append task.created
+	Kafka->>Notification: Deliver incident.created
+	Kafka->>Notification: Deliver task.created
 	Frontend->>Gateway: GET /notifications
 	Gateway->>Notification: Fetch notifications
 	Notification-->>Gateway: Notification list
@@ -76,7 +76,7 @@ flowchart TD
 	B -- Yes --> C[Use HTTP through API Gateway]
 	C --> D[Incident Service / Task Service / Notification Service]
 
-	B -- No, this is background reaction --> E[Publish event to RabbitMQ]
+	B -- No, this is background reaction --> E[Publish event to Kafka]
 	E --> F[Other services consume event]
 	F --> G[Create tasks / notifications / future AI triggers]
 ```
@@ -116,8 +116,8 @@ Other services decide what to do with that event.
 - consumes `task.created`
 - stores notification records
 
-### RabbitMQ
-- message broker between services
+### Kafka
+- distributed event log between services
 
 ## Communication styles
 ### Synchronous communication
@@ -139,7 +139,7 @@ Examples:
 ## Why both styles exist together
 A real system often uses both:
 - HTTP for direct user actions
-- RabbitMQ for background reactions and decoupled workflows
+- Kafka for background reactions and decoupled workflows
 
 ## Design pattern in simple words
 ### Request-response pattern
@@ -164,7 +164,7 @@ Phase 3 prepares the project for:
 
 ## Simple learning summary
 Phase 3 teaches:
-- why queues matter
+- why event streams matter
 - how events connect microservices
 - how one action can trigger many downstream actions
 - why gateways and brokers serve different purposes

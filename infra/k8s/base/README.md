@@ -6,7 +6,7 @@ This folder contains the Phase 6 deployment assets for the platform.
 - Namespace
 - ConfigMap and Secret
 - Deployments and Services for the frontend and backend services
-- RabbitMQ and Qdrant infrastructure
+- Kafka and Qdrant infrastructure
 - PersistentVolumeClaims for stateful dependencies
 - Ingress for the web entry point
 
@@ -33,5 +33,6 @@ The default `secrets.yaml` keeps the AI orchestrator in fallback mode. Add a rea
 ## References
 - `docs/phase-6-architecture.md`
 - `docs/phase-7-architecture.md`
+- `docs/kafka-messaging.md`
 - `infra/k8s/monitoring/README.md`
 - `README.md`

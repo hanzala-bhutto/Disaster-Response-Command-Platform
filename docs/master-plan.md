@@ -24,7 +24,7 @@ A disaster operator receives a new incident, reviews AI-supported guidance, crea
 - AI Orchestrator
 
 ### Infrastructure
-- RabbitMQ
+- Kafka
 - PostgreSQL
 - Redis
 - Qdrant
@@ -58,7 +58,7 @@ Keep the first version small.
 ### Include
 - incident CRUD
 - task creation
-- RabbitMQ event publication and consumption
+- Kafka event publication and consumption
 - document upload and indexing
 - Qdrant retrieval
 - one AI workflow: triage + response plan
@@ -165,8 +165,8 @@ Output: short public message
 - `notification.created`
 - `ai.plan.generated`
 
-## 12. Why RabbitMQ
-RabbitMQ is easier than Kafka for the first version and is enough for event-driven learning.
+## 12. Why Kafka
+Kafka fits better once the platform needs durable event streams, replay, and independent consumer groups.
 
 ## 13. Why Qdrant
 Qdrant is lightweight, clear, and good for student RAG projects.
@@ -175,7 +175,7 @@ Qdrant is lightweight, clear, and good for student RAG projects.
 Even if the LLM is external, the rest of the platform can still run on Kubernetes:
 - frontend
 - FastAPI services
-- RabbitMQ
+- Kafka
 - PostgreSQL
 - Redis
 - Qdrant

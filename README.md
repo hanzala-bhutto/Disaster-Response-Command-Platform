@@ -4,7 +4,7 @@ A disaster operations platform built to demonstrate:
 - React frontend
 - FastAPI backend
 - microservices
-- RabbitMQ messaging
+- Kafka event streaming
 - PostgreSQL storage
 - Qdrant RAG
 - agentic AI workflows
@@ -21,7 +21,7 @@ This platform receives disaster incidents like floods or fires and turns them in
 ## Stack
 - Frontend: React
 - Backend: FastAPI
-- Message Broker: RabbitMQ
+- Message Broker: Kafka
 - Database: PostgreSQL
 - Cache: Redis
 - Vector DB: Qdrant
@@ -40,7 +40,7 @@ This platform receives disaster incidents like floods or fires and turns them in
 ## Phases
 1. Phase 1 - plan and project skeleton
 2. Phase 2 - incident and task CRUD
-3. Phase 3 - RabbitMQ event flow and notifications
+3. Phase 3 - Kafka event flow and notifications
 4. Phase 4 - RAG with Qdrant
 5. Phase 5 - AI orchestration
 6. Phase 6 - Kubernetes deployment
@@ -53,6 +53,7 @@ Phase 7 observability assets are implemented.
 - `docs/master-plan.md`
 - `docs/phases.md`
 - `docs/learning-map.md`
+- `docs/kafka-messaging.md`
 - `docs/phase-6-architecture.md`
 - `docs/phase-7-architecture.md`
 - `infra/k8s/base/README.md`
@@ -70,7 +71,7 @@ Build one flow end to end:
 ## Deployment
 Phase 6 adds:
 - container images for the frontend and each service
-- Kubernetes manifests for the application stack, RabbitMQ, and Qdrant
+- Kubernetes manifests for the application stack, Kafka, and Qdrant
 - ConfigMaps, Secrets, persistent volumes, and ingress
 - a local cluster runbook in `infra/k8s/base/README.md`
 
@@ -79,7 +80,7 @@ Phase 7 adds:
 - `/metrics` endpoints on all FastAPI services
 - Prometheus scrape configuration for application and infrastructure metrics
 - Grafana provisioning with a platform overview dashboard
-- RabbitMQ exporter metrics for broker visibility
+- Kafka exporter metrics for broker visibility
 - a monitoring runbook in `infra/k8s/monitoring/README.md`
 
 ## Architecture references

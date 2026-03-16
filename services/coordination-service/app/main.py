@@ -6,6 +6,7 @@ from .event_bus import safe_publish, start_incident_consumer
 from .metrics import configure_metrics
 from .schemas import Task, TaskCreate, TaskUpdate
 from .service import TaskService
+from .settings_data import settings
 
 app = FastAPI(title="Coordination Service")
 configure_metrics(app)
@@ -27,7 +28,7 @@ def handle_incident_created(message: dict) -> None:
         )
     )
     safe_publish(
-        "task.created",
+        settings.task_created_topic,
         {
             "event_type": "task.created",
             "task": task.model_dump(mode="json"),
@@ -63,7 +64,7 @@ def get_task(task_id: UUID) -> Task:
 def create_task(payload: TaskCreate) -> Task:
     task = service.create_task(payload)
     safe_publish(
-        "task.created",
+        settings.task_created_topic,
         {
             "event_type": "task.created",
             "task": task.model_dump(mode="json"),

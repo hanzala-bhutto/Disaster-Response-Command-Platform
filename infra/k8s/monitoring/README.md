@@ -5,7 +5,7 @@ This folder contains the Phase 7 observability stack for the platform.
 ## Included components
 - Prometheus for metric scraping, storage, and query execution
 - Grafana for dashboards and visual analysis
-- RabbitMQ exporter for broker and queue metrics
+- Kafka exporter for broker and topic metrics
 - ingress routes for the monitoring tools
 
 ## Apply order
@@ -23,7 +23,7 @@ This folder contains the Phase 7 observability stack for the platform.
 ## What Prometheus scrapes
 - all FastAPI services at `/metrics`
 - Qdrant at `/metrics`
-- RabbitMQ exporter at `/metrics`
+- Kafka exporter at `/metrics`
 - Prometheus itself for self-observation
 
 ## What Grafana shows

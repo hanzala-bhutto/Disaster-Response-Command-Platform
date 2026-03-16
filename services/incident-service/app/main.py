@@ -6,6 +6,7 @@ from .event_bus import safe_publish
 from .metrics import configure_metrics
 from .schemas import Incident, IncidentCreate, IncidentUpdate
 from .service import IncidentService
+from .settings_data import settings
 
 app = FastAPI(title="Incident Service")
 configure_metrics(app)
@@ -34,7 +35,7 @@ def get_incident(incident_id: UUID) -> Incident:
 def create_incident(payload: IncidentCreate) -> Incident:
     incident = service.create_incident(payload)
     safe_publish(
-        "incident.created",
+        settings.incident_created_topic,
         {
             "event_type": "incident.created",
             "incident": incident.model_dump(mode="json"),

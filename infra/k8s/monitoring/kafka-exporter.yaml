@@ -1,40 +1,31 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: rabbitmq-exporter
+  name: kafka-exporter
   namespace: disaster-response
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: rabbitmq-exporter
+      app: kafka-exporter
   template:
     metadata:
       labels:
-        app: rabbitmq-exporter
+        app: kafka-exporter
     spec:
       containers:
-        - name: rabbitmq-exporter
-          image: kbudde/rabbitmq-exporter:v1.0.0-RC19
-          env:
-            - name: RABBIT_URL
-              value: http://rabbitmq:15672
-            - name: RABBIT_USER
-              value: platform
-            - name: RABBIT_PASSWORD
-              value: platformpass
-            - name: PUBLISH_PORT
-              value: "9419"
-            - name: OUTPUT_FORMAT
-              value: prometheus
+        - name: kafka-exporter
+          image: danielqsj/kafka-exporter:v1.7.0
+          args:
+            - --kafka.server=kafka:9092
           ports:
-            - containerPort: 9419
+            - containerPort: 9308
               name: http
           readinessProbe:
             httpGet:
               path: /metrics
               port: http
-            initialDelaySeconds: 10
+            initialDelaySeconds: 15
             periodSeconds: 10
           livenessProbe:
             httpGet:
@@ -46,12 +37,12 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: rabbitmq-exporter
+  name: kafka-exporter
   namespace: disaster-response
 spec:
   selector:
-    app: rabbitmq-exporter
+    app: kafka-exporter
   ports:
     - name: http
-      port: 9419
+      port: 9308
       targetPort: http

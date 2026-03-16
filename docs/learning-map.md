@@ -21,7 +21,7 @@
 
 ### Distributed systems
 - microservices
-- message queues
+- event streams and consumer groups
 - event-driven design
 - decoupled services
 

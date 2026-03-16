@@ -11,7 +11,7 @@ The deployment keeps the same service boundaries from earlier phases and adds:
 - container images for each service
 - cluster networking through Kubernetes Services
 - shared runtime configuration through ConfigMaps and Secrets
-- persistent storage for RabbitMQ and Qdrant
+- persistent storage for Kafka and Qdrant
 - ingress for browser access
 
 ## Diagram: cluster overview
@@ -29,7 +29,7 @@ flowchart LR
     AO --> CS
     AO --> NS
     AO --> RS
-    IS -- incident.created --> MQ[(RabbitMQ)]
+    IS -- incident.created --> MQ[(Kafka)]
     MQ -- incident.created --> CS
     MQ -- incident.created --> NS
     CS -- task.created --> MQ
@@ -52,9 +52,9 @@ flowchart TD
         RS[RAG Deployment + Service]
         AO[AI Orchestrator Deployment + Service]
         GS[Ingestion Deployment + Service]
-        MQ[RabbitMQ Deployment + Service]
+        MQ[Kafka Deployment + Service]
         QD[Qdrant Deployment + Service]
-        PVC1[(RabbitMQ PVC)]
+        PVC1[(Kafka PVC)]
         PVC2[(Qdrant PVC)]
     end
 
@@ -94,7 +94,7 @@ sequenceDiagram
 ### ConfigMap
 The shared ConfigMap provides:
 - service-to-service base URLs
-- RabbitMQ exchange and queue names
+- Kafka bootstrap server, topic, and consumer-group settings
 - Qdrant settings
 - default LLM base URL and model name
 
@@ -105,8 +105,10 @@ The Secret provides:
 The base manifest leaves this empty so the AI orchestrator starts in fallback mode by default.
 
 ## Persistent components
-### RabbitMQ
-RabbitMQ stores broker state on a persistent volume claim so queue state survives pod restarts.
+### Kafka
+Kafka runs as a three-broker KRaft StatefulSet in the local cluster so the deployment uses Kafka's distributed broker model rather than a single standalone node.
+
+Each broker stores state on its own persistent volume claim so topic data survives pod restarts.
 
 ### Qdrant
 Qdrant stores the vector index on a persistent volume claim so ingested knowledge remains available.
@@ -128,7 +130,7 @@ Phase 6 covers local-cluster deployment for:
 - RAG service
 - AI orchestrator
 - ingestion service
-- RabbitMQ
+- Kafka
 - Qdrant
 
 ## What comes after Phase 6

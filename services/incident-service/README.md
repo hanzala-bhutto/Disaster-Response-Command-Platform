@@ -22,7 +22,7 @@ Stores and manages disaster incidents.
 ## Events published
 - `incident.created`
 
-## RabbitMQ behavior
+## Kafka behavior
 When a new incident is created, this service publishes `incident.created`.
 
 ## Events consumed
@@ -34,8 +34,8 @@ None for now.
 3. for Kubernetes, build the container image from `Dockerfile`
 
 ## Environment variables
-- `RABBITMQ_URL`
-- `RABBITMQ_EXCHANGE`
+- `KAFKA_BOOTSTRAP_SERVERS`
+- `INCIDENT_CREATED_TOPIC`
 
 ## Container port
 - `8001`

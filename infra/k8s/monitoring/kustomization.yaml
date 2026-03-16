@@ -2,11 +2,11 @@ apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 namespace: disaster-response
 resources:
-  - ../base/namespace.yaml
+  - namespace.yaml
   - monitoring-secrets.yaml
   - prometheus-config.yaml
   - prometheus.yaml
-  - rabbitmq-exporter.yaml
+  - kafka-exporter.yaml
   - grafana-datasource.yaml
   - grafana-dashboard-provider.yaml
   - grafana-dashboard-platform.yaml

@@ -4,13 +4,11 @@ metadata:
   name: platform-config
   namespace: disaster-response
 data:
-  RABBITMQ_URL: amqp://platform:platformpass@rabbitmq:5672/%2F
-  RABBITMQ_HTTP_URL: http://rabbitmq:15672
-  RABBITMQ_USERNAME: platform
-  RABBITMQ_PASSWORD: platformpass
-  RABBITMQ_EXCHANGE: disaster_events
-  INCIDENT_QUEUE_NAME: coordination.incident.created
-  NOTIFICATION_QUEUE_NAME: notification.events
+  KAFKA_BOOTSTRAP_SERVERS: kafka-0.kafka-headless:9092,kafka-1.kafka-headless:9092,kafka-2.kafka-headless:9092
+  INCIDENT_CREATED_TOPIC: incident.created
+  TASK_CREATED_TOPIC: task.created
+  COORDINATION_CONSUMER_GROUP: coordination-service
+  NOTIFICATION_CONSUMER_GROUP: notification-service
   QDRANT_URL: http://qdrant:6333
   QDRANT_COLLECTION_NAME: disaster_knowledge
   EMBEDDING_SIZE: "128"

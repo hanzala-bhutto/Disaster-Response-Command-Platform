@@ -32,7 +32,7 @@ Implement incident and task CRUD with a simple React dashboard.
 
 ## Phase 3 - Messaging
 ### Goal
-Connect services using RabbitMQ.
+Connect services using Kafka.
 
 ### Deliverables
 - publish `incident.created`
@@ -44,6 +44,7 @@ Connect services using RabbitMQ.
 - async systems
 - event design
 - loose coupling
+- topics and consumer groups
 
 ## Phase 4 - RAG
 ### Goal
@@ -100,7 +101,7 @@ Add operational visibility with metrics, dashboards, and monitoring endpoints.
 - `/metrics` endpoint on each FastAPI service
 - Prometheus scrape and storage setup
 - Grafana dashboards for platform health
-- RabbitMQ exporter metrics
+- Kafka exporter metrics
 - monitoring runbook and architecture guide
 
 ### What you learn

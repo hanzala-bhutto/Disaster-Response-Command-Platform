@@ -24,7 +24,7 @@ Creates and manages response tasks for incidents.
 ## Events consumed
 - `incident.created`
 
-## RabbitMQ behavior
+## Kafka behavior
 This service listens for `incident.created` and auto-creates a starter task.
 
 ## How to run locally
@@ -33,9 +33,10 @@ This service listens for `incident.created` and auto-creates a starter task.
 3. for Kubernetes, build the container image from `Dockerfile`
 
 ## Environment variables
-- `RABBITMQ_URL`
-- `RABBITMQ_EXCHANGE`
-- `INCIDENT_QUEUE_NAME`
+- `KAFKA_BOOTSTRAP_SERVERS`
+- `INCIDENT_CREATED_TOPIC`
+- `TASK_CREATED_TOPIC`
+- `COORDINATION_CONSUMER_GROUP`
 
 ## Container port
 - `8002`

@@ -350,27 +350,27 @@ data:
           "targets": [
             {
               "editorMode": "code",
-              "expr": "sum by (service) (rate(platform_rag_search_requests_total[5m]))",
-              "legendFormat": "searches {{service}}",
+              "expr": "sum(kafka_brokers)",
+              "legendFormat": "kafka brokers",
               "range": true,
               "refId": "A"
             },
             {
               "editorMode": "code",
-              "expr": "sum by (service) (rate(platform_rag_chunks_indexed_total[5m]))",
-              "legendFormat": "indexed chunks {{service}}",
+              "expr": "sum(kafka_topic_partitions)",
+              "legendFormat": "topic partitions",
               "range": true,
               "refId": "B"
             },
             {
               "editorMode": "code",
-              "expr": "sum by (service) (rate(platform_notifications_created_total[5m]))",
-              "legendFormat": "notifications {{service}}",
+              "expr": "sum by (topic) (kafka_topic_partition_current_offset)",
+              "legendFormat": "offset {{topic}}",
               "range": true,
               "refId": "C"
             }
           ],
-          "title": "Knowledge and notification activity",
+          "title": "Kafka broker and topic activity",
           "type": "timeseries"
         }
       ],

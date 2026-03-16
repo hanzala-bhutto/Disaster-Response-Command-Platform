@@ -12,12 +12,12 @@ That means the platform can now answer questions like:
 - which workflows are running in `llm` mode versus `fallback` mode?
 - how many incidents, tasks, notifications, and documents are currently in memory?
 - are events being published and consumed as expected?
-- is RabbitMQ healthy and are queues growing?
+- is Kafka healthy and are topic offsets moving?
 
 ## Main idea
 Phase 7 adds four layers:
 1. application metrics inside each FastAPI service
-2. infrastructure metrics from RabbitMQ and Qdrant
+2. infrastructure metrics from Kafka and Qdrant
 3. Prometheus for scraping and storing metrics
 4. Grafana for dashboards and operational visibility
 
@@ -34,8 +34,8 @@ flowchart LR
     P --> AO[AI Orchestrator /metrics]
     P --> ING[Ingestion Service /metrics]
     P --> Q[Qdrant /metrics]
-    P --> RX[RabbitMQ Exporter /metrics]
-    RX --> RMQ[RabbitMQ Management API]
+    P --> RX[Kafka Exporter /metrics]
+    RX --> RMQ[Kafka Broker]
 ```
 
 ## Diagram: application request monitoring flow
@@ -62,14 +62,14 @@ sequenceDiagram
 ## Diagram: event monitoring flow
 ```mermaid
 flowchart TD
-    A[Incident Service] -- incident.created --> B[RabbitMQ]
+    A[Incident Service] -- incident.created --> B[Kafka]
     B --> C[Coordination Service]
     B --> D[Notification Service]
     C -- task.created --> B
     P[Prometheus] --> E[incident-service metrics]
     P --> F[coordination-service metrics]
     P --> G[notification-service metrics]
-    P --> H[rabbitmq-exporter metrics]
+    P --> H[kafka-exporter metrics]
     E --> I[event publish counters]
     F --> J[event publish and consume counters]
     G --> K[event consume counters]
@@ -99,15 +99,14 @@ In this phase, Grafana is provisioned automatically with:
 - a dashboard provider
 - a platform overview dashboard
 
-### 4. RabbitMQ exporter
-RabbitMQ does not expose the exact Prometheus format needed by the dashboard stack in the current setup.
-
-The exporter connects to the RabbitMQ management API and converts broker data into Prometheus metrics.
+### 4. Kafka exporter
+Kafka exporter exposes broker and topic metrics in Prometheus format for the three-broker Kafka cluster.
 
 That gives visibility into broker behavior such as:
-- queue depth
-- message activity
-- consumer visibility
+- broker availability
+- topic partition counts
+- offset movement
+- consumer lag when consumer groups are tracked
 
 ### 5. Qdrant metrics
 Qdrant is scraped directly by Prometheus.
@@ -239,7 +238,7 @@ Shows how much traffic each service is receiving over time.
 Shows slower requests without being distorted by average-only views.
 
 ### Event throughput
-Shows publishing and consuming activity for the RabbitMQ-driven workflow.
+Shows publishing and consuming activity for the Kafka-driven workflow.
 
 ### AI workflow throughput and latency
 Shows how often AI workflows run and how long they take.

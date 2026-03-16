@@ -3,9 +3,10 @@ from pydantic_settings import BaseSettings
 
 
 class Settings(BaseSettings):
-    rabbitmq_url: str = Field(default="amqp://guest:guest@localhost:5672/%2F")
-    rabbitmq_exchange: str = Field(default="disaster_events")
-    incident_queue_name: str = Field(default="coordination.incident.created")
+    kafka_bootstrap_servers: str = Field(default="localhost:9092")
+    incident_created_topic: str = Field(default="incident.created")
+    task_created_topic: str = Field(default="task.created")
+    coordination_consumer_group: str = Field(default="coordination-service")
 
 
 settings = Settings()

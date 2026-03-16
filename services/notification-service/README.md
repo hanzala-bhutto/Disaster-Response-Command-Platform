@@ -21,15 +21,19 @@ None for now.
 - `incident.created`
 - `task.created`
 
+## Kafka behavior
+This service consumes both event topics in its own consumer group and turns them into dashboard notifications.
+
 ## How to run locally
 1. install dependencies from `requirements.txt`
 2. run `uvicorn app.main:app --reload --port 8003`
 3. for Kubernetes, build the container image from `Dockerfile`
 
 ## Environment variables
-- `RABBITMQ_URL`
-- `RABBITMQ_EXCHANGE`
-- `NOTIFICATION_QUEUE_NAME`
+- `KAFKA_BOOTSTRAP_SERVERS`
+- `INCIDENT_CREATED_TOPIC`
+- `TASK_CREATED_TOPIC`
+- `NOTIFICATION_CONSUMER_GROUP`
 
 ## Container port
 - `8003`

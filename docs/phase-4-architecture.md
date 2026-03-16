@@ -3,7 +3,7 @@
 This document explains the Phase 4 RAG flow in a simple way.
 
 ## What changed in Phase 4
-Phase 3 gave the system event-driven behavior using RabbitMQ.
+Phase 3 gave the system event-driven behavior using Kafka.
 Phase 4 adds a knowledge base so the platform can retrieve useful evidence before Phase 5 starts generating AI answers.
 
 ## Main idea
@@ -122,7 +122,7 @@ Later we can swap it with a stronger embedding model.
 Phase 4 mainly uses synchronous HTTP.
 That is because document ingestion and retrieval are direct user actions.
 
-RabbitMQ from Phase 3 still exists, but it is not the main part of this phase.
+Kafka from Phase 3 still exists, but it is not the main part of this phase.
 
 ## What this prepares us for
 Phase 4 prepares Phase 5 because the AI orchestrator will need:
