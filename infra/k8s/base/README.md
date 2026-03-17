@@ -7,6 +7,7 @@ This folder contains the Phase 6 deployment assets for the platform.
 - ConfigMap and Secret
 - Deployments and Services for the frontend and backend services
 - Kafka and Qdrant infrastructure
+- Kafka topic bootstrap Job
 - PersistentVolumeClaims for stateful dependencies
 - Ingress for the web entry point
 
@@ -24,6 +25,19 @@ This folder contains the Phase 6 deployment assets for the platform.
 Use `kubectl apply -k infra/k8s/base` after the images are built and available to the cluster runtime.
 
 The default `secrets.yaml` keeps the AI orchestrator in fallback mode. Add a real `LLM_API_KEY` value when live LLM calls are needed.
+
+## Local cluster workflow
+This stack is intended for local Kubernetes deployment.
+
+Recommended setup:
+1. create a `kind` cluster with `infra/k8s/kind/cluster.yaml`
+2. build the local Docker images listed below
+3. load those images into the `kind` cluster
+4. apply `kubectl apply -k infra/k8s/base`
+5. optionally apply `kubectl apply -k infra/k8s/monitoring`
+
+Convenience script:
+- `scripts/local_k8s/deploy-kind.ps1`
 
 ## Access pattern
 - ingress host: `disaster.local`

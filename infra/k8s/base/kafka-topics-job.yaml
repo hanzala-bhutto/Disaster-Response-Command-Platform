@@ -1,0 +1,32 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: kafka-topics-bootstrap
+  namespace: disaster-response
+spec:
+  backoffLimit: 6
+  ttlSecondsAfterFinished: 300
+  template:
+    metadata:
+      labels:
+        app: kafka-topics-bootstrap
+    spec:
+      restartPolicy: OnFailure
+      containers:
+        - name: kafka-topics-bootstrap
+          image: bitnami/kafka:3.8.0
+          command:
+            - /bin/bash
+            - -ec
+          args:
+            - |
+              echo "Waiting for Kafka brokers to accept admin connections..."
+              until /opt/bitnami/kafka/bin/kafka-topics.sh --bootstrap-server kafka:9092 --list >/dev/null 2>&1; do
+                sleep 5
+              done
+
+              echo "Creating required topics if they do not already exist..."
+              /opt/bitnami/kafka/bin/kafka-topics.sh --bootstrap-server kafka:9092 --create --if-not-exists --topic incident.created --partitions 3 --replication-factor 3
+              /opt/bitnami/kafka/bin/kafka-topics.sh --bootstrap-server kafka:9092 --create --if-not-exists --topic task.created --partitions 3 --replication-factor 3
+
+              echo "Kafka topic provisioning completed."

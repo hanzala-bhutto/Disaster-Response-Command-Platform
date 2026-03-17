@@ -6,6 +6,7 @@ resources:
   - configmap.yaml
   - secrets.yaml
   - kafka.yaml
+  - kafka-topics-job.yaml
   - qdrant.yaml
   - incident-service.yaml
   - coordination-service.yaml

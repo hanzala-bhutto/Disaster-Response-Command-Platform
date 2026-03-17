@@ -6,6 +6,8 @@ This document explains the Phase 6 Kubernetes deployment in a simple way.
 Phase 5 completed the application flow.
 Phase 6 packages the platform so the services can run together inside a local Kubernetes cluster.
 
+The intended environment is a local Kubernetes setup such as `kind`.
+
 ## Main idea
 The deployment keeps the same service boundaries from earlier phases and adds:
 - container images for each service
@@ -109,6 +111,8 @@ The base manifest leaves this empty so the AI orchestrator starts in fallback mo
 Kafka runs as a three-broker KRaft StatefulSet in the local cluster so the deployment uses Kafka's distributed broker model rather than a single standalone node.
 
 Each broker stores state on its own persistent volume claim so topic data survives pod restarts.
+
+A bootstrap Job creates the required topics with fixed partition and replication settings so application startup does not depend on Kafka auto topic creation.
 
 ### Qdrant
 Qdrant stores the vector index on a persistent volume claim so ingested knowledge remains available.

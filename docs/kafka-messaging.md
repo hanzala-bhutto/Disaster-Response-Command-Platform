@@ -29,6 +29,12 @@ The platform currently uses two topics:
 - `incident.created`
 - `task.created`
 
+In Kubernetes, these topics are created explicitly by a bootstrap job instead of relying on broker auto-creation.
+
+Current topic settings:
+- partitions: `3`
+- replication factor: `3`
+
 A producer writes JSON payloads into a topic.
 
 ### Consumer groups
@@ -90,6 +96,8 @@ Compared with RabbitMQ, Kafka usually means:
 The local Kubernetes stack runs Kafka in KRaft mode with three brokers.
 
 That keeps the local deployment aligned with Kafka's distributed broker model while still avoiding ZooKeeper.
+
+The base stack also provisions topics with a Kubernetes Job so the topic layout is deterministic.
 
 A later production-style setup would typically add:
 - multiple brokers

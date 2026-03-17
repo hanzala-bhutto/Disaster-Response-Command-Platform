@@ -75,6 +75,18 @@ Phase 6 adds:
 - ConfigMaps, Secrets, persistent volumes, and ingress
 - a local cluster runbook in `infra/k8s/base/README.md`
 
+## Local Kubernetes
+The intended deployment target is a local Kubernetes cluster.
+
+Recommended workflow:
+- create a local `kind` cluster with `infra/k8s/kind/cluster.yaml`
+- build and load the Docker images into that cluster
+- apply `infra/k8s/base`
+- apply `infra/k8s/monitoring`
+
+Convenience script:
+- `scripts/local_k8s/deploy-kind.ps1`
+
 ## Observability
 Phase 7 adds:
 - `/metrics` endpoints on all FastAPI services

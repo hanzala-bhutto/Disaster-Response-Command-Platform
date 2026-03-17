@@ -12,6 +12,8 @@ This folder contains the Phase 7 observability stack for the platform.
 1. apply the platform stack from `infra/k8s/base`
 2. apply the monitoring stack with `kubectl apply -k infra/k8s/monitoring`
 
+This monitoring stack is intended to run on the same local Kubernetes cluster as the application stack.
+
 ## Access hosts
 - `grafana.disaster.local`
 - `prometheus.disaster.local`
