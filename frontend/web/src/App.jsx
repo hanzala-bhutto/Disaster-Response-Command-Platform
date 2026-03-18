@@ -457,7 +457,7 @@ function App() {
           </section>
 
           <section className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm lg:col-span-2">
-            <div className="flex items-center justify-between gap-3"><div><h2 className="text-xl font-semibold text-slate-900">Event Notifications</h2><p className="mt-1 text-sm text-slate-500">Notifications created by the notification service from RabbitMQ events.</p></div><div className="rounded-2xl bg-slate-100 px-3 py-2 text-sm font-medium text-slate-600">{notifications.length} total</div></div>
+            <div className="flex items-center justify-between gap-3"><div><h2 className="text-xl font-semibold text-slate-900">Event Notifications</h2><p className="mt-1 text-sm text-slate-500">Notifications created by the notification service from Kafka events.</p></div><div className="rounded-2xl bg-slate-100 px-3 py-2 text-sm font-medium text-slate-600">{notifications.length} total</div></div>
             {!loading && notifications.length === 0 ? <p className="mt-4 text-sm text-slate-500">No notifications yet.</p> : null}
             <div className="mt-6 space-y-3">{notifications.map((notification) => (<article className="rounded-2xl border border-slate-200 bg-slate-50 p-4" key={notification.id}><div className="flex flex-wrap items-center gap-2"><Badge value={notification.level === 'critical' ? 'critical' : notification.level === 'warning' ? 'high' : 'low'} /><span className="rounded-full bg-slate-200 px-3 py-1 text-xs font-semibold text-slate-700">{notification.source_event}</span></div><h3 className="mt-3 text-base font-semibold text-slate-900">{notification.title}</h3><p className="mt-1 text-sm text-slate-600">{notification.message}</p></article>))}</div>
           </section>

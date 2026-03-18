@@ -7,6 +7,7 @@
 - dashboard layout
 - forms and tables
 - API integration
+- browser-based end-to-end testing
 
 ### Backend
 - FastAPI routing
@@ -39,6 +40,12 @@
 - Prometheus metrics
 - Grafana dashboards
 - operational monitoring
+- repeatable test execution
+
+### Quality engineering
+- Playwright browser automation
+- route mocking for frontend tests
+- regression safety for critical user flows
 
 ## Best way to learn from this project
 For every phase, answer these questions:

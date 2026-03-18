@@ -110,5 +110,21 @@ Add operational visibility with metrics, dashboards, and monitoring endpoints.
 - how Grafana dashboards are provisioned
 - how to observe HTTP, event, RAG, and AI workflow behavior
 
+## Phase 8 - Automated testing
+### Goal
+Add repeatable frontend test coverage for the main operator workflows.
+
+### Deliverables
+- Playwright configuration for the React dashboard
+- end-to-end tests for dashboard load, incident creation, and AI workflow execution
+- mocked API routes for deterministic browser tests
+- testing architecture guide
+
+### What you learn
+- how browser automation works
+- how to test user flows instead of only isolated functions
+- how request mocking helps produce stable frontend tests
+- how to build a safety net before expanding features further
+
 ## Recommended order
 Always finish one small end-to-end slice before adding new complexity.

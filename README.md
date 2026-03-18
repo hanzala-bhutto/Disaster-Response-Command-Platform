@@ -45,9 +45,10 @@ This platform receives disaster incidents like floods or fires and turns them in
 5. Phase 5 - AI orchestration
 6. Phase 6 - Kubernetes deployment
 7. Phase 7 - observability and monitoring
+8. Phase 8 - automated testing
 
 ## Current status
-Phase 7 observability assets are implemented.
+Phase 8 automated frontend testing assets are implemented.
 
 ## What to read first
 - `docs/master-plan.md`
@@ -56,6 +57,7 @@ Phase 7 observability assets are implemented.
 - `docs/kafka-messaging.md`
 - `docs/phase-6-architecture.md`
 - `docs/phase-7-architecture.md`
+- `docs/phase-8-testing.md`
 - `infra/k8s/base/README.md`
 - `infra/k8s/monitoring/README.md`
 
@@ -95,9 +97,17 @@ Phase 7 adds:
 - Kafka exporter metrics for broker visibility
 - a monitoring runbook in `infra/k8s/monitoring/README.md`
 
+## Automated testing
+Phase 8 adds:
+- Playwright browser-based end-to-end tests for the React dashboard
+- route-level API mocking so frontend flows can be tested without all backend services running
+- repeatable test commands in `frontend/web/package.json`
+- a testing architecture guide in `docs/phase-8-testing.md`
+
 ## Architecture references
 - `docs/phase-3-architecture.md`
 - `docs/phase-4-architecture.md`
 - `docs/phase-5-architecture.md`
 - `docs/phase-6-architecture.md`
 - `docs/phase-7-architecture.md`
+- `docs/phase-8-testing.md`
