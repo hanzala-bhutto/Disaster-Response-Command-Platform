@@ -41,11 +41,13 @@
 - Grafana dashboards
 - operational monitoring
 - repeatable test execution
+- GitHub Actions pipelines
 
 ### Quality engineering
 - Playwright browser automation
 - route mocking for frontend tests
 - regression safety for critical user flows
+- automated CI quality gates
 
 ## Best way to learn from this project
 For every phase, answer these questions:

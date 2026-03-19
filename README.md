@@ -34,7 +34,7 @@ This platform receives disaster incidents like floods or fires and turns them in
 - `shared` - shared schemas and helpers
 - `infra` - deployment files
 - `docs` - architecture and phase plans
-- `scripts` - seed and simulator scripts
+- `scripts` - seed, simulator, local cluster, and CI helper scripts
 - `data` - sample documents and sample incidents
 
 ## Phases
@@ -46,9 +46,10 @@ This platform receives disaster incidents like floods or fires and turns them in
 6. Phase 6 - Kubernetes deployment
 7. Phase 7 - observability and monitoring
 8. Phase 8 - automated testing
+9. Phase 9 - continuous integration
 
 ## Current status
-Phase 8 automated frontend testing assets are implemented.
+Phase 9 continuous integration assets are implemented.
 
 ## What to read first
 - `docs/master-plan.md`
@@ -58,6 +59,7 @@ Phase 8 automated frontend testing assets are implemented.
 - `docs/phase-6-architecture.md`
 - `docs/phase-7-architecture.md`
 - `docs/phase-8-testing.md`
+- `docs/phase-9-ci.md`
 - `infra/k8s/base/README.md`
 - `infra/k8s/monitoring/README.md`
 
@@ -104,6 +106,14 @@ Phase 8 adds:
 - repeatable test commands in `frontend/web/package.json`
 - a testing architecture guide in `docs/phase-8-testing.md`
 
+## Continuous integration
+Phase 9 adds:
+- a GitHub Actions workflow in `.github/workflows/ci.yml`
+- automatic Playwright execution for the frontend
+- automatic Python service validation using `scripts/ci/validate_python_services.py`
+- automatic `kubectl kustomize` rendering for the base and monitoring stacks
+- a CI architecture guide in `docs/phase-9-ci.md`
+
 ## Architecture references
 - `docs/phase-3-architecture.md`
 - `docs/phase-4-architecture.md`
@@ -111,3 +121,4 @@ Phase 8 adds:
 - `docs/phase-6-architecture.md`
 - `docs/phase-7-architecture.md`
 - `docs/phase-8-testing.md`
+- `docs/phase-9-ci.md`

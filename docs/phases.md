@@ -126,5 +126,22 @@ Add repeatable frontend test coverage for the main operator workflows.
 - how request mocking helps produce stable frontend tests
 - how to build a safety net before expanding features further
 
+## Phase 9 - Continuous integration
+### Goal
+Run the most important validation checks automatically on every push and pull request.
+
+### Deliverables
+- GitHub Actions workflow for repository validation
+- automated Playwright test execution
+- automated Python service compile checks
+- automated Kubernetes kustomize rendering
+- CI architecture guide
+
+### What you learn
+- how continuous integration pipelines are structured
+- how to separate frontend, backend, and infrastructure checks
+- how to keep validation fast enough to run on every change
+- how to turn manual quality steps into repeatable automation
+
 ## Recommended order
 Always finish one small end-to-end slice before adding new complexity.
