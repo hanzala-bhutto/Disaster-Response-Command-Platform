@@ -143,5 +143,23 @@ Run the most important validation checks automatically on every push and pull re
 - how to keep validation fast enough to run on every change
 - how to turn manual quality steps into repeatable automation
 
+## Phase 10 - Backend testing and container release automation
+### Goal
+Add backend service test coverage and automate Docker image build and release steps in CI.
+
+### Deliverables
+- pytest API tests for the FastAPI services
+- unit tests for core service-layer and event logic
+- shared Python test dependency definition
+- backend test matrix in GitHub Actions
+- container build and publish automation
+- architecture guide
+
+### What you learn
+- how to test FastAPI services with `TestClient`
+- how to isolate service tests inside a monorepo
+- how to combine test gates with container automation in CI
+- how to publish validated images automatically after successful checks
+
 ## Recommended order
 Always finish one small end-to-end slice before adding new complexity.

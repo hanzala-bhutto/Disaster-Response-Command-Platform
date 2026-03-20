@@ -47,9 +47,10 @@ This platform receives disaster incidents like floods or fires and turns them in
 7. Phase 7 - observability and monitoring
 8. Phase 8 - automated testing
 9. Phase 9 - continuous integration
+10. Phase 10 - backend testing and container release automation
 
 ## Current status
-Phase 9 continuous integration assets are implemented.
+Phase 10 backend quality and container automation assets are implemented.
 
 ## What to read first
 - `docs/master-plan.md`
@@ -60,6 +61,7 @@ Phase 9 continuous integration assets are implemented.
 - `docs/phase-7-architecture.md`
 - `docs/phase-8-testing.md`
 - `docs/phase-9-ci.md`
+- `docs/phase-10-backend-quality.md`
 - `infra/k8s/base/README.md`
 - `infra/k8s/monitoring/README.md`
 
@@ -114,6 +116,15 @@ Phase 9 adds:
 - automatic `kubectl kustomize` rendering for the base and monitoring stacks
 - a CI architecture guide in `docs/phase-9-ci.md`
 
+## Backend quality and container automation
+Phase 10 adds:
+- pytest-based backend API and unit tests across the FastAPI services
+- a shared Python test dependency file in `requirements-test.txt`
+- a backend test matrix in `.github/workflows/ci.yml`
+- automatic Docker image builds for every deployable component
+- automatic GHCR publishing on pushes to `main` or `master`
+- an architecture guide in `docs/phase-10-backend-quality.md`
+
 ## Architecture references
 - `docs/phase-3-architecture.md`
 - `docs/phase-4-architecture.md`
@@ -122,3 +133,4 @@ Phase 9 adds:
 - `docs/phase-7-architecture.md`
 - `docs/phase-8-testing.md`
 - `docs/phase-9-ci.md`
+- `docs/phase-10-backend-quality.md`

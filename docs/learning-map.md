@@ -14,6 +14,7 @@
 - schema validation
 - service layers
 - clean folder patterns
+- API and unit testing for services
 
 ### Databases
 - PostgreSQL tables and relations
@@ -42,12 +43,14 @@
 - operational monitoring
 - repeatable test execution
 - GitHub Actions pipelines
+- automated container publishing
 
 ### Quality engineering
 - Playwright browser automation
 - route mocking for frontend tests
 - regression safety for critical user flows
 - automated CI quality gates
+- backend API and unit tests
 
 ## Best way to learn from this project
 For every phase, answer these questions:
